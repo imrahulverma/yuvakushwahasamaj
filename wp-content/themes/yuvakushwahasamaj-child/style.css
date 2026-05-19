@@ -5,7 +5,7 @@ Description: Custom child theme for Yuvakushwahasamaj Community Website with ACF
 Author: Yuvakushwahasamaj
 Author URI: https://yuvakushwahasamaj.local
 Template: twentytwentyfive
-Version: 1.0.0
+Version: 1.1.0
 Text Domain: yuvakushwahasamaj
 Domain Path: /languages
 Requires at least: 6.0
@@ -15,43 +15,101 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 */
 
 /* ============================================================
-   Foundation — CSS variables + base typography only.
-   All page-specific styling lives inside each template's
-   <style> block so they stay self-contained and conflict-free.
+   Foundation — warm editorial palette + typography.
+   Per-template styling lives inside each template's <style>
+   block so each page stays self-contained.
    ============================================================ */
 
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700;9..144,800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;500;600;700&display=swap');
+
 :root {
-	--color-primary: #ff9933;
-	--color-secondary: #138808;
-	--color-tertiary: #1f4788;
-	--color-accent: #ffffff;
+	/* Editorial warm palette */
+	--ink:        #1f1612;      /* near-black with warm undertone */
+	--ink-soft:   #4a3f37;      /* body text */
+	--ink-mute:   #837567;      /* meta text */
+	--paper:      #fbf5ec;      /* cream page background */
+	--paper-deep: #f3ead9;      /* deeper cream for alt sections */
+	--card:       #ffffff;      /* clean card surface */
+	--rule:       #e6dccb;      /* hairline dividers */
+
+	--saffron:    #c8541c;      /* deeper, heritage saffron */
+	--saffron-d:  #a14116;
+	--forest:     #1e5a3c;      /* deep forest green */
+	--forest-d:   #154128;
+	--indigo:     #1f4788;      /* legacy tertiary, retained */
+
+	/* Legacy variables kept so existing classes don't break */
+	--color-primary:   var(--saffron);
+	--color-secondary: var(--forest);
+	--color-tertiary:  var(--indigo);
+	--color-accent:    var(--card);
+
+	--font-display: 'Fraunces', 'Noto Serif', Georgia, serif;
+	--font-body:    'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+	--font-hindi:   'Noto Sans Devanagari', 'Inter', sans-serif;
 }
+
+html { background: var(--paper); }
 
 body {
-	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	font-family: var(--font-body);
 	margin: 0;
-	color: #222;
-	line-height: 1.6;
+	color: var(--ink-soft);
+	background: var(--paper);
+	line-height: 1.7;
+	font-size: 16.5px;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
-a { color: var(--color-primary); }
-a:hover { color: #e68a2e; }
+h1, h2, h3, h4, h5 {
+	font-family: var(--font-display);
+	color: var(--ink);
+	font-weight: 600;
+	letter-spacing: -0.01em;
+}
 
-img { max-width: 100%; height: auto; }
+a { color: var(--saffron); text-decoration: none; transition: color .2s ease; }
+a:hover { color: var(--saffron-d); }
+
+img { max-width: 100%; height: auto; display: block; }
 
 .site-main { min-height: 60vh; }
 
+::selection { background: var(--saffron); color: #fff; }
+
 /* Generic register button (used by events template) */
 .btn-register {
-	background-color: var(--color-primary);
-	color: white;
-	padding: 10px 20px;
+	background-color: var(--saffron);
+	color: #fff;
+	padding: 11px 24px;
 	text-decoration: none;
-	border-radius: 5px;
+	border-radius: 2px;
 	display: inline-block;
+	font-weight: 600;
+	letter-spacing: .02em;
 	transition: background-color 0.3s ease;
 }
 .btn-register:hover {
-	background-color: #e68a2e;
-	color: white;
+	background-color: var(--saffron-d);
+	color: #fff;
+}
+
+/* Shared editorial primitives any template can reuse */
+.eyebrow {
+	font-family: var(--font-body);
+	text-transform: uppercase;
+	letter-spacing: .22em;
+	font-size: .72rem;
+	font-weight: 600;
+	color: var(--saffron);
+}
+
+.ornament {
+	display: block;
+	width: 64px;
+	height: 14px;
+	margin: 14px 0 0;
+	color: var(--saffron);
+	opacity: .85;
 }

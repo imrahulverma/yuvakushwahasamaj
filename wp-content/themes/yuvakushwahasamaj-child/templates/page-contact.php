@@ -1,25 +1,39 @@
 <?php
 /**
  * Template Name: Contact Us
- * Description: Contact Us page template
+ * Description: Contact Us page template — warm editorial style
  */
 
 get_header();
 ?>
 
-<main id="main" class="site-main">
+<main id="main" class="site-main contact-page">
+
+	<!-- Editorial page hero -->
+	<section class="page-hero">
+		<div class="page-hero-inner">
+			<span class="eyebrow">Get in Touch · We are Listening</span>
+			<h1><?php the_title(); ?></h1>
+			<?php echo yks_ornament(); ?>
+			<p class="page-hero-lede">Send us a note — about membership, an event you are planning, or simply to say hello. We respond within two working days.</p>
+		</div>
+	</section>
+
 	<div class="container">
-		
-		<h1><?php the_title(); ?></h1>
-		
-		<div class="contact-content">
-			
+
+		<section class="contact-grid">
+
 			<!-- Contact Form -->
-			<section class="contact-form-section">
-				<h2>Get In Touch</h2>
+			<div class="contact-form-section">
+				<header class="section-head section-head--left">
+					<span class="eyebrow">Chapter 01 · Write to Us</span>
+					<h2>Send a Message</h2>
+					<?php echo yks_ornament(); ?>
+				</header>
+
 				<form id="contact-form" method="POST" class="contact-form">
 					<?php wp_nonce_field( 'contact_form_nonce' ); ?>
-					
+
 					<div class="form-group">
 						<label for="contact_name">Full Name <span>*</span></label>
 						<input type="text" id="contact_name" name="contact_name" required>
@@ -39,7 +53,7 @@ get_header();
 					<div class="form-group">
 						<label for="contact_subject">Subject <span>*</span></label>
 						<select id="contact_subject" name="contact_subject" required>
-							<option>Select Subject</option>
+							<option>Select subject</option>
 							<option value="inquiry">General Inquiry</option>
 							<option value="membership">Membership Question</option>
 							<option value="event">Event Information</option>
@@ -54,365 +68,176 @@ get_header();
 						<textarea id="contact_message" name="contact_message" rows="6" required></textarea>
 					</div>
 
-					<div class="form-group">
+					<div class="form-group form-check">
 						<label>
 							<input type="checkbox" name="privacy" required>
-							I agree to the privacy policy
+							<span>I agree to the privacy policy and the terms of communication.</span>
 						</label>
 					</div>
 
-					<button type="submit" class="btn-submit">Send Message</button>
+					<button type="submit" class="form-submit">
+						<span>Send Message</span>
+						<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+					</button>
 				</form>
-			</section>
+			</div>
 
 			<!-- Contact Information -->
-			<section class="contact-info-section">
-				<h2>Contact Information</h2>
-				
-				<div class="contact-info-grid">
-					<div class="contact-info-item">
-						<div class="contact-icon">📍</div>
-						<h3>Address</h3>
+			<aside class="contact-info-section">
+				<header class="section-head section-head--left">
+					<span class="eyebrow">Chapter 02 · Find Us</span>
+					<h2>Contact Information</h2>
+					<?php echo yks_ornament(); ?>
+				</header>
+
+				<div class="contact-info-list">
+					<article class="contact-info-item">
+						<span class="contact-info-label">Address</span>
 						<p>
 							Yuvakushwahasamaj Headquarters<br>
-							Community Center, City Name<br>
+							Community Centre, City Name<br>
 							State, PIN Code
 						</p>
-					</div>
+					</article>
 
-					<div class="contact-info-item">
-						<div class="contact-icon">📞</div>
-						<h3>Phone</h3>
+					<article class="contact-info-item">
+						<span class="contact-info-label">Telephone</span>
 						<p>
-							Main Line: +91-XXX-XXXX-XXXX<br>
-							WhatsApp: +91-XXX-XXXX-XXXX<br>
-							Available: Mon-Sun, 9AM-6PM
+							<a href="tel:+918229062767">+91 82290 62767</a><br>
+							<a href="https://wa.me/918229062767" target="_blank" rel="noopener">WhatsApp · +91 82290 62767</a><br>
+							<span class="contact-info-meta">Mon – Sat, 9 AM – 6 PM</span>
 						</p>
-					</div>
+					</article>
 
-					<div class="contact-info-item">
-						<div class="contact-icon">✉️</div>
-						<h3>Email</h3>
+					<article class="contact-info-item">
+						<span class="contact-info-label">Email</span>
 						<p>
-							General: info@yuvakushwahasamaj.org<br>
-							Membership: members@yuvakushwahasamaj.org<br>
-							Events: events@yuvakushwahasamaj.org
+							<a href="mailto:info@yuvakushwahasamaj.org">info@yuvakushwahasamaj.org</a><br>
+							<a href="mailto:members@yuvakushwahasamaj.org">members@yuvakushwahasamaj.org</a><br>
+							<a href="mailto:events@yuvakushwahasamaj.org">events@yuvakushwahasamaj.org</a>
 						</p>
-					</div>
+					</article>
 
-					<div class="contact-info-item">
-						<div class="contact-icon">⏰</div>
-						<h3>Office Hours</h3>
+					<article class="contact-info-item">
+						<span class="contact-info-label">Hours</span>
 						<p>
-							Monday - Friday: 9:00 AM - 6:00 PM<br>
-							Saturday: 10:00 AM - 4:00 PM<br>
-							Sunday: Closed
+							Monday – Friday · 9:00 AM – 6:00 PM<br>
+							Saturday · 10:00 AM – 4:00 PM<br>
+							Sunday · Closed
 						</p>
-					</div>
+					</article>
 				</div>
-			</section>
+			</aside>
 
-			<!-- Social Media -->
-			<section class="social-media-section">
-				<h2>Follow Us On Social Media</h2>
-				<div class="social-links">
-					<a href="https://facebook.com/yuvakushwahasamaj" target="_blank" rel="noopener noreferrer" class="social-link facebook">
-						<span>📘</span>
-						<p>Facebook</p>
-					</a>
-					<a href="https://instagram.com/yuvakushwahasamaj" target="_blank" rel="noopener noreferrer" class="social-link instagram">
-						<span>📷</span>
-						<p>Instagram</p>
-					</a>
-					<a href="https://youtube.com/yuvakushwahasamaj" target="_blank" rel="noopener noreferrer" class="social-link youtube">
-						<span>▶️</span>
-						<p>YouTube</p>
-					</a>
-					<a href="https://twitter.com/yuvakushwaha" target="_blank" rel="noopener noreferrer" class="social-link twitter">
-						<span>𝕏</span>
-						<p>Twitter</p>
-					</a>
-					<a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" class="social-link whatsapp">
-						<span>💬</span>
-						<p>WhatsApp</p>
-					</a>
-				</div>
-			</section>
+		</section>
 
-		</div>
+		<!-- Social Media -->
+		<section class="social-media-section">
+			<header class="section-head section-head--center">
+				<span class="eyebrow">Chapter 03 · Follow Us</span>
+				<h2>Find Us Online</h2>
+				<?php echo yks_ornament(); ?>
+			</header>
+			<div class="social-links">
+				<a href="https://facebook.com/yuvakushwahasamaj" target="_blank" rel="noopener noreferrer" class="social-link">
+					<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13.5 21v-7.5h2.5l.4-3h-2.9V8.6c0-.9.2-1.5 1.5-1.5h1.6V4.4c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.2H8v3h2.5V21h3z"/></svg>
+					<span>Facebook</span>
+				</a>
+				<a href="https://instagram.com/yuvakushwahasamaj" target="_blank" rel="noopener noreferrer" class="social-link">
+					<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+					<span>Instagram</span>
+				</a>
+				<a href="https://youtube.com/yuvakushwahasamaj" target="_blank" rel="noopener noreferrer" class="social-link">
+					<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M21.6 7.2s-.2-1.4-.8-2c-.7-.8-1.5-.8-1.9-.9C16 4 12 4 12 4s-4 0-6.9.3c-.4.1-1.2.1-1.9.9-.6.6-.8 2-.8 2S2.2 8.8 2.2 10.4v1.5c0 1.6.2 3.2.2 3.2s.2 1.4.8 2c.7.8 1.7.8 2.1.9 1.6.1 6.7.3 6.7.3s4 0 6.9-.3c.4-.1 1.2-.1 1.9-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.5c0-1.6-.2-3.2-.2-3.2zM10 14.4V8.6l5.2 2.9z"/></svg>
+					<span>YouTube</span>
+				</a>
+				<a href="https://twitter.com/yuvakushwaha" target="_blank" rel="noopener noreferrer" class="social-link">
+					<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+					<span>Twitter</span>
+				</a>
+				<a href="https://wa.me/919876543210" target="_blank" rel="noopener noreferrer" class="social-link">
+					<svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A10.4 10.4 0 0 0 12 0C6.2 0 1.5 4.7 1.5 10.5c0 1.8.5 3.6 1.4 5.2L1 24l8.5-2.2c1.5.8 3.2 1.3 4.9 1.3h.1c5.8 0 10.5-4.7 10.5-10.5 0-2.8-1-5.5-3-7.5l-1.5-1.6zM12 21.3c-1.5 0-3-.4-4.3-1.2l-.3-.2-3.7 1 .9-3.5-.2-.3a8.4 8.4 0 0 1-1.3-4.6c0-4.7 3.8-8.5 8.6-8.5 2.3 0 4.4.9 6 2.5a8.5 8.5 0 0 1 2.5 6c0 4.7-3.8 8.5-8.6 8.5zm4.8-6.5c-.3-.1-1.6-.8-1.8-.9-.2-.1-.4-.1-.6.2-.2.3-.6.9-.8 1-.2.2-.3.2-.5.1-.3-.1-1.2-.4-2.2-1.4-.8-.7-1.4-1.6-1.5-1.9-.2-.3 0-.4.1-.5.1-.1.3-.3.4-.5.1-.1.2-.3.3-.5.1-.2 0-.3 0-.5-.1-.1-.7-1.6-.9-2.2-.2-.6-.4-.5-.6-.5h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.1 0 1.3.9 2.5 1.1 2.7.1.2 1.9 2.8 4.5 4 .6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.6-.6 1.8-1.3.2-.6.2-1.2.1-1.3 0-.1-.2-.2-.4-.3z"/></svg>
+					<span>WhatsApp</span>
+				</a>
+			</div>
+		</section>
 
 	</div>
 </main>
 
 <style>
-	.container {
-		max-width: 1200px;
-		margin: 0 auto;
-		padding: 0 20px;
-	}
+.contact-page{background:var(--paper);font-family:var(--font-body);color:var(--ink-soft)}
+.container{max-width:1240px;margin:0 auto;padding:0 28px}
 
-	.site-main > .container h1 {
-		font-size: 2.5rem;
-		margin-bottom: 20px;
-		padding-top: 40px;
-	}
+/* ---------- Editorial page hero ---------- */
+.page-hero{padding:80px 28px 70px;background:
+	radial-gradient(1200px 600px at 80% 10%, rgba(200,84,28,.08), transparent 60%),
+	radial-gradient(900px 500px at 0% 90%, rgba(30,90,60,.08), transparent 60%),
+	var(--paper)}
+.page-hero-inner{max-width:820px;margin:0 auto}
+.page-hero .eyebrow{padding-left:46px;position:relative}
+.page-hero .eyebrow::before{content:"";position:absolute;left:0;top:50%;width:34px;height:1px;background:var(--saffron)}
+.page-hero h1{font-family:var(--font-display);font-weight:600;font-size:clamp(2.4rem,4.6vw,3.8rem);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:14px 0 0}
+.page-hero h1::first-letter{color:var(--saffron);font-style:italic}
+.page-hero .hs-ornament{margin:18px 0 24px}
+.page-hero-lede{font-family:var(--font-display);font-style:italic;font-size:1.25rem;line-height:1.55;color:var(--ink);margin:0;max-width:680px}
 
-	.contact-content {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 60px;
-		margin: 60px 0;
-	}
+/* ---------- Section heads ---------- */
+.contact-page section{padding:80px 0}
+.section-head{margin:0 0 40px;max-width:680px}
+.section-head--left{text-align:left}
+.section-head--center{text-align:center;margin-left:auto;margin-right:auto}
+.section-head--center .hs-ornament{margin-left:auto;margin-right:auto}
+.section-head h2{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,3vw,2.4rem);line-height:1.1;letter-spacing:-.015em;color:var(--ink);margin:8px 0 0}
+.section-head .hs-ornament{margin-top:18px}
+.section-head--left .hs-ornament{margin-left:0}
 
-	section {
-		padding: 40px 0;
-	}
+/* ---------- Two-column grid ---------- */
+.contact-grid{display:grid;grid-template-columns:1.2fr 1fr;gap:80px;align-items:start}
 
-	section h2 {
-		font-size: 1.8rem;
-		margin-bottom: 30px;
-		text-align: center;
-	}
+/* ---------- Contact form ---------- */
+.contact-form{background:var(--card);padding:40px;border:1px solid var(--rule)}
+.form-group{margin-bottom:22px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.form-group label{display:block;margin-bottom:8px;font-weight:600;color:var(--ink);font-size:.74rem;letter-spacing:.16em;text-transform:uppercase}
+.form-group label span{color:var(--saffron);margin-left:3px}
+.form-group input,.form-group select,.form-group textarea{width:100%;padding:13px 14px;border:1px solid var(--rule);background:var(--paper);font-size:1rem;font-family:inherit;color:var(--ink);transition:border-color .2s,background .2s;resize:vertical}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{outline:none;border-color:var(--saffron);background:var(--card)}
+.form-check label{display:flex;align-items:flex-start;gap:10px;text-transform:none;letter-spacing:0;font-size:.92rem;color:var(--ink-soft);font-weight:400;line-height:1.6}
+.form-check input[type="checkbox"]{width:18px;height:18px;margin-top:2px;accent-color:var(--saffron);flex:0 0 auto}
+.form-submit{display:inline-flex;align-items:center;gap:10px;background:var(--ink);color:var(--paper);padding:14px 28px;border:0;font-size:.95rem;font-weight:600;letter-spacing:.04em;cursor:pointer;transition:background .25s;font-family:var(--font-body);width:100%;justify-content:center}
+.form-submit svg{transition:transform .25s}
+.form-submit:hover{background:var(--saffron);color:#fff}
+.form-submit:hover svg{transform:translateX(3px)}
 
-	/* Contact Form */
-	.contact-form-section h2 {
-		text-align: left;
-	}
+/* ---------- Contact info ---------- */
+.contact-info-list{display:flex;flex-direction:column;gap:0;border-top:1px solid var(--rule)}
+.contact-info-item{padding:24px 0;border-bottom:1px solid var(--rule);display:grid;grid-template-columns:120px 1fr;gap:24px;align-items:start}
+.contact-info-label{font-size:.72rem;color:var(--saffron);font-weight:600;letter-spacing:.2em;text-transform:uppercase;padding-top:3px}
+.contact-info-item p{margin:0;color:var(--ink);line-height:1.85;font-size:.96rem}
+.contact-info-item a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--rule);transition:border-color .2s,color .2s}
+.contact-info-item a:hover{color:var(--saffron);border-bottom-color:var(--saffron)}
+.contact-info-meta{display:inline-block;margin-top:6px;font-size:.78rem;color:var(--ink-mute);letter-spacing:.06em;text-transform:uppercase;font-weight:500}
 
-	.contact-form {
-		background-color: #f9f9f9;
-		padding: 30px;
-		border-radius: 8px;
-	}
+/* ---------- Social media ---------- */
+.social-media-section{background:var(--paper-deep);margin:30px -28px;padding:80px 28px !important}
+.social-links{display:flex;justify-content:center;gap:14px;flex-wrap:wrap}
+.social-link{display:inline-flex;align-items:center;gap:12px;text-decoration:none;padding:14px 24px;background:var(--card);border:1px solid var(--rule);color:var(--ink);transition:all .25s;font-weight:600;font-size:.92rem;letter-spacing:.02em}
+.social-link:hover{background:var(--ink);color:var(--paper);border-color:var(--ink);transform:translateY(-3px)}
+.social-link svg{color:currentColor;transition:color .25s}
 
-	.form-group {
-		margin-bottom: 20px;
-	}
-
-	.form-row {
-		display: grid;
-		grid-template-columns: 1fr 1fr;
-		gap: 20px;
-	}
-
-	.form-group label {
-		display: block;
-		margin-bottom: 8px;
-		font-weight: 500;
-		color: #333;
-	}
-
-	.form-group label span {
-		color: #ff9933;
-	}
-
-	.form-group input,
-	.form-group select,
-	.form-group textarea {
-		width: 100%;
-		padding: 12px;
-		border: 1px solid #ddd;
-		border-radius: 5px;
-		font-size: 1rem;
-		font-family: inherit;
-	}
-
-	.form-group input:focus,
-	.form-group select:focus,
-	.form-group textarea:focus {
-		outline: none;
-		border-color: #ff9933;
-		box-shadow: 0 0 0 3px rgba(255, 153, 51, 0.1);
-	}
-
-	.form-group label input[type="checkbox"] {
-		width: auto;
-		margin-right: 8px;
-	}
-
-	.btn-submit {
-		background-color: #138808;
-		color: white;
-		padding: 14px 40px;
-		border: none;
-		border-radius: 5px;
-		font-size: 1.1rem;
-		font-weight: bold;
-		cursor: pointer;
-		width: 100%;
-		transition: background-color 0.3s ease;
-	}
-
-	.btn-submit:hover {
-		background-color: #0d6106;
-	}
-
-	/* Contact Information */
-	.contact-info-section h2 {
-		text-align: center;
-		grid-column: 1 / -1;
-	}
-
-	.contact-info-grid {
-		display: grid;
-		grid-template-columns: 1fr;
-		gap: 20px;
-	}
-
-	.contact-info-item {
-		background-color: #f9f9f9;
-		padding: 25px;
-		border-radius: 8px;
-		border-left: 4px solid #ff9933;
-		transition: transform 0.3s ease, box-shadow 0.3s ease;
-	}
-
-	.contact-info-item:hover {
-		transform: translateX(5px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-	}
-
-	.contact-icon {
-		font-size: 2rem;
-		margin-bottom: 10px;
-	}
-
-	.contact-info-item h3 {
-		font-size: 1.2rem;
-		margin: 10px 0 15px 0;
-		color: #333;
-	}
-
-	.contact-info-item p {
-		color: #666;
-		line-height: 1.8;
-		margin: 0;
-	}
-
-	/* Social Media */
-	.social-media-section {
-		grid-column: 1 / -1;
-		background-color: #f5f5f5;
-		padding: 60px 40px;
-		border-radius: 8px;
-		text-align: center;
-	}
-
-	.social-media-section h2 {
-		margin-bottom: 40px;
-	}
-
-	.social-links {
-		display: flex;
-		justify-content: center;
-		gap: 30px;
-		flex-wrap: wrap;
-	}
-
-	.social-link {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 10px;
-		text-decoration: none;
-		padding: 20px 30px;
-		background-color: white;
-		border-radius: 8px;
-		transition: all 0.3s ease;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-	}
-
-	.social-link:hover {
-		transform: translateY(-5px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-	}
-
-	.social-link span {
-		font-size: 2.5rem;
-	}
-
-	.social-link p {
-		margin: 0;
-		font-weight: 500;
-		color: #333;
-	}
-
-	.social-link.facebook:hover {
-		background-color: #1877f2;
-	}
-
-	.social-link.facebook:hover p {
-		color: white;
-	}
-
-	.social-link.instagram:hover {
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-	}
-
-	.social-link.instagram:hover p {
-		color: white;
-	}
-
-	.social-link.youtube:hover {
-		background-color: #ff0000;
-	}
-
-	.social-link.youtube:hover p {
-		color: white;
-	}
-
-	.social-link.twitter:hover {
-		background-color: #000;
-	}
-
-	.social-link.twitter:hover p {
-		color: white;
-	}
-
-	.social-link.whatsapp:hover {
-		background-color: #25d366;
-	}
-
-	.social-link.whatsapp:hover p {
-		color: white;
-	}
-
-	@media (max-width: 1024px) {
-		.contact-content {
-			grid-template-columns: 1fr;
-			gap: 40px;
-		}
-
-		.social-media-section {
-			grid-column: 1;
-		}
-	}
-
-	@media (max-width: 768px) {
-		.site-main > .container h1 {
-			font-size: 1.8rem;
-		}
-
-		section h2 {
-			font-size: 1.5rem;
-		}
-
-		.form-row {
-			grid-template-columns: 1fr;
-		}
-
-		.social-links {
-			gap: 15px;
-		}
-
-		.social-link {
-			padding: 15px 20px;
-		}
-
-		.social-link span {
-			font-size: 2rem;
-		}
-	}
+@media (max-width:960px){
+	.contact-grid{grid-template-columns:1fr;gap:60px}
+	.contact-page section{padding:60px 0}
+	.social-media-section{margin:30px -20px;padding:60px 22px !important}
+}
+@media (max-width:768px){
+	.page-hero{padding:60px 24px 60px}
+	.form-row{grid-template-columns:1fr;gap:0}
+	.contact-form{padding:28px 22px}
+	.contact-info-item{grid-template-columns:1fr;gap:8px}
+	.social-link{padding:12px 20px;font-size:.88rem}
+}
 </style>
 
 <?php

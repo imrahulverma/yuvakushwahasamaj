@@ -1,7 +1,7 @@
 <?php
 /**
  * Template Name: Gallery
- * Description: Gallery page template
+ * Description: Gallery page template — warm editorial style
  */
 
 get_header();
@@ -28,17 +28,18 @@ $gallery_categories = get_terms( array( 'taxonomy' => 'gallery_category', 'hide_
 
 <main id="main" class="site-main gallery-page">
 
-	<!-- Hero -->
-	<section class="gal-hero">
-		<div class="gal-hero-inner">
-			<p class="gal-hero-eyebrow">Memories · Moments · Milestones</p>
+	<!-- Editorial page hero -->
+	<section class="page-hero">
+		<div class="page-hero-inner">
+			<span class="eyebrow">Album · Memories · Milestones</span>
 			<h1><?php the_title(); ?></h1>
-			<p class="gal-hero-desc">A visual journey through our community's events, achievements, and celebrations.</p>
+			<?php echo yks_ornament(); ?>
+			<p class="page-hero-lede">A visual record of our community's gatherings, achievements, and quiet moments — assembled by the people who lived them.</p>
 			<div class="gal-hero-meta">
-				<span><strong><?php echo intval( $total_items ); ?></strong> photos</span>
+				<span><strong><?php echo intval( $total_items ); ?></strong> photographs</span>
 				<?php if ( $gallery_categories ) : ?>
-					<span class="dot">·</span>
-					<span><strong><?php echo count( $gallery_categories ); ?></strong> categories</span>
+					<span class="gal-hero-sep">·</span>
+					<span><strong><?php echo count( $gallery_categories ); ?></strong> collections</span>
 				<?php endif; ?>
 			</div>
 		</div>
@@ -51,12 +52,12 @@ $gallery_categories = get_terms( array( 'taxonomy' => 'gallery_category', 'hide_
 
 			<?php if ( ! is_wp_error( $gallery_categories ) && $gallery_categories ) : ?>
 				<nav class="gallery-filters" aria-label="Filter gallery">
-					<a href="<?php the_permalink(); ?>" class="filter-btn <?php echo empty( $gallery_filter ) ? 'active' : ''; ?>">
-						<span class="filter-dot"></span> All <span class="filter-count"><?php echo intval( $total_items ); ?></span>
+					<a href="<?php the_permalink(); ?>" class="filter-btn <?php echo empty( $gallery_filter ) ? 'is-active' : ''; ?>">
+						All <span class="filter-count"><?php echo intval( $total_items ); ?></span>
 					</a>
 					<?php foreach ( $gallery_categories as $category ) : ?>
-						<a href="<?php echo esc_url( add_query_arg( 'category', $category->slug, get_permalink() ) ); ?>" class="filter-btn <?php echo ( $gallery_filter === $category->slug ) ? 'active' : ''; ?>">
-							<span class="filter-dot"></span> <?php echo esc_html( $category->name ); ?> <span class="filter-count"><?php echo intval( $category->count ); ?></span>
+						<a href="<?php echo esc_url( add_query_arg( 'category', $category->slug, get_permalink() ) ); ?>" class="filter-btn <?php echo ( $gallery_filter === $category->slug ) ? 'is-active' : ''; ?>">
+							<?php echo esc_html( $category->name ); ?> <span class="filter-count"><?php echo intval( $category->count ); ?></span>
 						</a>
 					<?php endforeach; ?>
 				</nav>
@@ -69,25 +70,25 @@ $gallery_categories = get_terms( array( 'taxonomy' => 'gallery_category', 'hide_
 					$caption  = get_scf_field( 'caption', $item->ID );
 					$year     = get_scf_field( 'year', $item->ID );
 					$full_url = $image_id ? wp_get_attachment_image_url( $image_id, 'full' ) : '';
-					// Vary tile sizes for a mosaic feel.
 					$size_class = ( $i % 7 === 0 ) ? 'is-large' : ( ( $i % 5 === 0 ) ? 'is-tall' : ( ( $i % 6 === 0 ) ? 'is-wide' : '' ) );
 					?>
 					<figure class="gallery-item <?php echo esc_attr( $size_class ); ?>" data-full="<?php echo esc_attr( $full_url ); ?>" data-caption="<?php echo esc_attr( $caption ); ?>">
 						<?php if ( $image_id ) : ?>
 							<?php echo wp_get_attachment_image( $image_id, 'large', false, array( 'class' => 'gallery-image', 'loading' => 'lazy' ) ); ?>
 						<?php else : ?>
-							<div class="gallery-placeholder"><span>🖼</span></div>
+							<div class="gallery-placeholder"><span>YK</span></div>
 						<?php endif; ?>
 						<figcaption class="gallery-overlay">
 							<?php if ( $year ) : ?><span class="gallery-year"><?php echo esc_html( $year ); ?></span><?php endif; ?>
 							<?php if ( $caption ) : ?><p class="gallery-caption"><?php echo esc_html( $caption ); ?></p><?php endif; ?>
-							<span class="gallery-zoom" aria-hidden="true">⊕</span>
+							<span class="gallery-zoom" aria-hidden="true">
+								<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="11" cy="11" r="6"/><path d="m20 20-3.5-3.5" stroke-linecap="round"/><path d="M11 8v6M8 11h6" stroke-linecap="round"/></svg>
+							</span>
 						</figcaption>
 					</figure>
 				<?php endforeach; wp_reset_postdata(); else : ?>
 					<div class="gallery-empty">
-						<div class="gallery-empty-icon">📷</div>
-						<p>No photos found<?php echo $gallery_filter ? ' in this category' : '' ?>. Check back soon!</p>
+						<p>No photographs found<?php echo $gallery_filter ? ' in this collection' : '' ?>. Check back soon.</p>
 					</div>
 				<?php endif; ?>
 			</div>
@@ -95,8 +96,12 @@ $gallery_categories = get_terms( array( 'taxonomy' => 'gallery_category', 'hide_
 
 		<!-- Video Gallery -->
 		<section class="video-gallery">
-			<h2 class="section-h2">Video Highlights</h2>
-			<p class="section-sub">Subscribe to our YouTube channel for the latest community videos.</p>
+			<header class="section-head section-head--left">
+				<span class="eyebrow">Chapter 02 · Moving Picture</span>
+				<h2>Video Highlights</h2>
+				<?php echo yks_ornament(); ?>
+				<p class="section-sub">Subscribe to our YouTube channel for the latest community videos.</p>
+			</header>
 
 			<div class="video-grid">
 				<?php
@@ -109,9 +114,9 @@ $gallery_categories = get_terms( array( 'taxonomy' => 'gallery_category', 'hide_
 					<div class="video-item">
 						<div class="video-thumb">
 							<div class="video-placeholder">
-								<svg viewBox="0 0 60 60" width="60" height="60" aria-hidden="true">
-									<circle cx="30" cy="30" r="30" fill="#ff9933"/>
-									<polygon points="24,18 24,42 44,30" fill="#fff"/>
+								<svg viewBox="0 0 60 60" width="56" height="56" aria-hidden="true">
+									<circle cx="30" cy="30" r="29" fill="none" stroke="currentColor" stroke-width="1.5"/>
+									<polygon points="25,18 25,42 43,30" fill="currentColor"/>
 								</svg>
 							</div>
 						</div>
@@ -122,32 +127,36 @@ $gallery_categories = get_terms( array( 'taxonomy' => 'gallery_category', 'hide_
 					</div>
 				<?php endforeach; ?>
 			</div>
-			<p class="video-cta"><a href="#" target="_blank" rel="noopener">▶ Visit our YouTube channel</a></p>
+			<p class="video-cta"><a href="#" target="_blank" rel="noopener">Visit our YouTube channel &nbsp;→</a></p>
 		</section>
 
 		<!-- Press Coverage -->
 		<section class="press-coverage">
-			<h2 class="section-h2">Press Coverage & Media</h2>
-			<p class="section-sub">Our community in the news.</p>
+			<header class="section-head section-head--left">
+				<span class="eyebrow">Chapter 03 · In the Papers</span>
+				<h2>Press &amp; Media</h2>
+				<?php echo yks_ornament(); ?>
+				<p class="section-sub">Our community in the news.</p>
+			</header>
 
 			<div class="press-items">
 				<article class="press-item">
-					<span class="press-badge">📰 Article</span>
+					<span class="press-badge">Article</span>
 					<h3>Featured in Regional News</h3>
-					<p>Our community initiative was highlighted by major regional media outlets for its youth engagement programs.</p>
-					<a href="#" class="read-more">Read Article →</a>
+					<p>Our community initiative was highlighted by major regional media outlets for its youth engagement programmes.</p>
+					<a href="#" class="press-read">Read article &nbsp;→</a>
 				</article>
 				<article class="press-item">
-					<span class="press-badge">🎙 Interview</span>
+					<span class="press-badge">Interview</span>
 					<h3>Interview with Community Leaders</h3>
 					<p>Leaders discuss the vision and mission of Yuvakushwahasamaj in national broadcast.</p>
-					<a href="#" class="read-more">Watch Interview →</a>
+					<a href="#" class="press-read">Watch interview &nbsp;→</a>
 				</article>
 				<article class="press-item">
-					<span class="press-badge">🏆 Awards</span>
-					<h3>Awards & Recognition</h3>
+					<span class="press-badge">Honour</span>
+					<h3>Awards &amp; Recognition</h3>
 					<p>Recognition from government and civil society for outstanding contributions to youth development.</p>
-					<a href="#" class="read-more">Learn More →</a>
+					<a href="#" class="press-read">Learn more &nbsp;→</a>
 				</article>
 			</div>
 		</section>
@@ -156,9 +165,15 @@ $gallery_categories = get_terms( array( 'taxonomy' => 'gallery_category', 'hide_
 
 	<!-- Lightbox -->
 	<div class="gallery-lightbox" id="gallery-lightbox" aria-hidden="true" role="dialog" aria-label="Image viewer">
-		<button class="lb-close" aria-label="Close">✕</button>
-		<button class="lb-prev" aria-label="Previous">‹</button>
-		<button class="lb-next" aria-label="Next">›</button>
+		<button class="lb-close" aria-label="Close">
+			<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+		</button>
+		<button class="lb-prev" aria-label="Previous">
+			<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+		</button>
+		<button class="lb-next" aria-label="Next">
+			<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+		</button>
 		<figure class="lb-content">
 			<img class="lb-image" src="" alt="">
 			<figcaption class="lb-caption"></figcaption>
@@ -168,111 +183,114 @@ $gallery_categories = get_terms( array( 'taxonomy' => 'gallery_category', 'hide_
 </main>
 
 <style>
-.gallery-page{background:#fafafa}
-.container{max-width:1200px;margin:0 auto;padding:0 20px}
+.gallery-page{background:var(--paper);font-family:var(--font-body);color:var(--ink-soft)}
+.container{max-width:1240px;margin:0 auto;padding:0 28px}
 
-/* Hero */
-.gal-hero{background:linear-gradient(135deg,#ff9933 0%,#138808 100%);color:#fff;padding:80px 20px;text-align:center;position:relative;overflow:hidden}
-.gal-hero::before{content:"";position:absolute;inset:0;background-image:radial-gradient(circle at 20% 20%,rgba(255,255,255,.15) 0,transparent 40%),radial-gradient(circle at 80% 80%,rgba(255,255,255,.1) 0,transparent 40%);pointer-events:none}
-.gal-hero-inner{position:relative;max-width:760px;margin:0 auto}
-.gal-hero-eyebrow{margin:0 0 10px;text-transform:uppercase;letter-spacing:3px;font-size:.82rem;opacity:.9;font-weight:600}
-.gal-hero h1{font-size:3.2rem;margin:0 0 16px;font-weight:800;text-shadow:0 2px 12px rgba(0,0,0,.2);line-height:1.1}
-.gal-hero-desc{font-size:1.15rem;line-height:1.7;margin:0 0 26px;opacity:.95;font-weight:300}
-.gal-hero-meta{display:inline-flex;gap:14px;align-items:center;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);padding:10px 24px;border-radius:30px;font-size:.95rem}
-.gal-hero-meta strong{font-size:1.15rem;font-weight:700}
-.gal-hero-meta .dot{opacity:.6}
+/* ---------- Editorial page hero ---------- */
+.page-hero{padding:80px 28px 70px;background:
+	radial-gradient(1200px 600px at 80% 10%, rgba(200,84,28,.08), transparent 60%),
+	radial-gradient(900px 500px at 0% 90%, rgba(30,90,60,.08), transparent 60%),
+	var(--paper)}
+.page-hero-inner{max-width:820px;margin:0 auto}
+.page-hero .eyebrow{padding-left:46px;position:relative}
+.page-hero .eyebrow::before{content:"";position:absolute;left:0;top:50%;width:34px;height:1px;background:var(--saffron)}
+.page-hero h1{font-family:var(--font-display);font-weight:600;font-size:clamp(2.4rem,4.6vw,3.8rem);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:14px 0 0}
+.page-hero h1::first-letter{color:var(--saffron);font-style:italic}
+.page-hero .hs-ornament{margin:18px 0 24px}
+.page-hero-lede{font-family:var(--font-display);font-style:italic;font-size:1.25rem;line-height:1.55;color:var(--ink);margin:0 0 24px;max-width:680px}
+.gal-hero-meta{display:inline-flex;gap:14px;align-items:center;font-size:.85rem;color:var(--ink-mute);letter-spacing:.04em;border-top:1px solid var(--rule);padding-top:18px}
+.gal-hero-meta strong{font-family:var(--font-display);font-size:1.1rem;font-weight:600;color:var(--ink);margin-right:4px}
+.gal-hero-sep{opacity:.6;color:var(--saffron)}
 
-/* Section commons */
+/* ---------- Section heads ---------- */
 .gallery-page section{padding:60px 0}
-.section-h2{font-size:2rem;text-align:center;margin:0 0 10px;color:#222}
-.section-sub{text-align:center;color:#666;margin:0 0 40px;font-size:1.02rem}
+.section-head{margin:0 0 40px;max-width:760px}
+.section-head--left{text-align:left}
+.section-head h2{font-family:var(--font-display);font-weight:600;font-size:clamp(1.7rem,3vw,2.4rem);line-height:1.1;letter-spacing:-.015em;color:var(--ink);margin:8px 0 0}
+.section-head .hs-ornament{margin-top:18px;margin-left:0}
+.section-sub{margin:14px 0 0;color:var(--ink-mute);font-size:1rem;line-height:1.7}
 
-/* Filters */
-.gallery-filters{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-bottom:36px}
-.filter-btn{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border:2px solid #e5e5e5;background:#fff;border-radius:30px;text-decoration:none;color:#444;font-weight:500;font-size:.92rem;transition:all .25s}
-.filter-btn:hover{border-color:#ff9933;color:#ff9933;transform:translateY(-2px)}
-.filter-btn.active{background:#ff9933;border-color:#ff9933;color:#fff;box-shadow:0 4px 12px rgba(255,153,51,.35)}
-.filter-dot{width:8px;height:8px;border-radius:50%;background:currentColor;opacity:.6}
-.filter-count{background:rgba(0,0,0,.08);padding:2px 8px;border-radius:10px;font-size:.78rem;font-weight:600}
-.filter-btn.active .filter-count{background:rgba(255,255,255,.25)}
+/* ---------- Filters ---------- */
+.gallery-filters{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:36px;padding:10px 0;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.filter-btn{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;text-decoration:none;color:var(--ink-soft);font-weight:500;font-size:.88rem;letter-spacing:.02em;transition:color .2s;position:relative}
+.filter-btn:hover{color:var(--saffron)}
+.filter-btn.is-active{color:var(--saffron)}
+.filter-btn.is-active::after{content:"";position:absolute;left:16px;right:16px;bottom:2px;height:1px;background:var(--saffron)}
+.filter-count{background:var(--paper-deep);padding:2px 8px;font-size:.72rem;font-weight:600;color:var(--ink-mute)}
+.filter-btn.is-active .filter-count{background:var(--saffron);color:#fff}
 
-/* Mosaic — masonry-ish via row-span */
-.gallery-mosaic{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-auto-rows:200px;gap:14px}
-.gallery-item{position:relative;margin:0;overflow:hidden;border-radius:14px;cursor:pointer;background:#eee;box-shadow:0 2px 8px rgba(0,0,0,.06);transition:transform .3s,box-shadow .3s}
-.gallery-item:hover{transform:translateY(-4px);box-shadow:0 10px 24px rgba(0,0,0,.15)}
+/* ---------- Mosaic ---------- */
+.gallery-mosaic{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-auto-rows:200px;gap:12px}
+.gallery-item{position:relative;margin:0;overflow:hidden;cursor:pointer;background:var(--paper-deep);border:1px solid var(--rule);transition:transform .3s,box-shadow .3s,border-color .3s}
+.gallery-item:hover{transform:translateY(-4px);box-shadow:0 18px 30px -16px rgba(31,22,18,.22);border-color:var(--saffron)}
 .gallery-item.is-large{grid-column:span 2;grid-row:span 2}
 .gallery-item.is-tall{grid-row:span 2}
 .gallery-item.is-wide{grid-column:span 2}
-.gallery-item img,.gallery-placeholder{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s}
-.gallery-item:hover img{transform:scale(1.08)}
-.gallery-placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#fff5e6,#e8f5e8);font-size:3rem}
+.gallery-item img,.gallery-placeholder{width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s ease,filter .4s}
+.gallery-item:hover img{transform:scale(1.06);filter:saturate(1.1)}
+.gallery-placeholder{display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f3ead9,#e6dccb)}
+.gallery-placeholder span{font-family:var(--font-display);font-size:2.4rem;color:var(--saffron);opacity:.4;font-weight:600;letter-spacing:.05em}
 
-.gallery-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;background:linear-gradient(to top,rgba(0,0,0,.85) 0%,rgba(0,0,0,.2) 60%,transparent 100%);color:#fff;opacity:0;transition:opacity .3s}
+.gallery-overlay{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;padding:18px;background:linear-gradient(to top,rgba(31,22,18,.88) 0%,rgba(31,22,18,.2) 55%,transparent 100%);color:#fff;opacity:0;transition:opacity .3s}
 .gallery-item:hover .gallery-overlay{opacity:1}
-.gallery-year{display:inline-block;background:#ff9933;color:#fff;padding:3px 10px;border-radius:12px;font-size:.72rem;font-weight:700;margin-bottom:8px;align-self:flex-start;letter-spacing:.5px}
-.gallery-caption{margin:0;font-size:.92rem;line-height:1.4;font-weight:500}
-.gallery-zoom{position:absolute;top:14px;right:14px;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.25);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;font-size:1.4rem;color:#fff}
+.gallery-year{display:inline-block;background:var(--saffron);color:#fff;padding:3px 10px;font-size:.7rem;font-weight:700;margin-bottom:8px;align-self:flex-start;letter-spacing:.14em;text-transform:uppercase}
+.gallery-caption{margin:0;font-family:var(--font-display);font-style:italic;font-size:.95rem;line-height:1.5;font-weight:400}
+.gallery-zoom{position:absolute;top:14px;right:14px;width:38px;height:38px;background:rgba(255,255,255,.18);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;color:#fff;border:1px solid rgba(255,255,255,.3)}
 
-.gallery-empty{grid-column:1/-1;text-align:center;padding:60px 20px;color:#888}
-.gallery-empty-icon{font-size:4rem;margin-bottom:14px}
+.gallery-empty{grid-column:1/-1;text-align:center;padding:70px 20px;color:var(--ink-mute);font-style:italic;font-family:var(--font-display);font-size:1.05rem}
 
-/* Video gallery */
-.video-gallery{background:#fff;border-radius:16px;padding:60px 30px !important;margin:30px 0;box-shadow:0 2px 12px rgba(0,0,0,.05)}
-.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:1100px;margin:0 auto}
-.video-item{background:#fafafa;border-radius:12px;overflow:hidden;transition:transform .25s,box-shadow .25s;cursor:pointer}
-.video-item:hover{transform:translateY(-5px);box-shadow:0 8px 20px rgba(0,0,0,.1)}
-.video-thumb{position:relative;height:180px;background:linear-gradient(135deg,#222 0%,#444 100%);display:flex;align-items:center;justify-content:center}
+/* ---------- Video gallery ---------- */
+.video-gallery{background:var(--paper-deep);margin:30px -28px;padding:80px 28px !important}
+.video-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px;max-width:1100px}
+.video-item{background:var(--card);border:1px solid var(--rule);overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s;cursor:pointer}
+.video-item:hover{transform:translateY(-5px);box-shadow:0 18px 30px -16px rgba(31,22,18,.18);border-color:var(--saffron)}
+.video-thumb{position:relative;height:200px;background:var(--ink);display:flex;align-items:center;justify-content:center;color:var(--saffron)}
 .video-placeholder{transition:transform .25s}
-.video-item:hover .video-placeholder{transform:scale(1.1)}
-.video-body{padding:18px 20px}
-.video-body h3{margin:0 0 4px;font-size:1.05rem;color:#222}
-.video-body p{margin:0;color:#888;font-size:.85rem}
-.video-cta{text-align:center;margin:30px 0 0}
-.video-cta a{color:#ff9933;font-weight:600;text-decoration:none;font-size:1rem}
-.video-cta a:hover{text-decoration:underline}
+.video-item:hover .video-placeholder{transform:scale(1.08)}
+.video-body{padding:22px 24px 26px}
+.video-body h3{font-family:var(--font-display);margin:0 0 6px;font-size:1.15rem;color:var(--ink);font-weight:600;letter-spacing:-.01em}
+.video-body p{margin:0;color:var(--ink-mute);font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;font-weight:600}
+.video-cta{text-align:left;margin:36px 0 0}
+.video-cta a{color:var(--ink);font-weight:600;text-decoration:none;font-size:.95rem;border-bottom:1px solid var(--saffron);padding-bottom:3px;transition:color .2s}
+.video-cta a:hover{color:var(--saffron)}
 
-/* Press */
-.press-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;max-width:1100px;margin:0 auto}
-.press-item{background:#fff;padding:30px 26px;border-radius:14px;border-top:4px solid #ff9933;transition:transform .25s,box-shadow .25s;box-shadow:0 2px 10px rgba(0,0,0,.05);position:relative}
-.press-item:hover{transform:translateY(-6px);box-shadow:0 10px 24px rgba(0,0,0,.12)}
-.press-item:nth-child(2){border-top-color:#138808}
-.press-item:nth-child(3){border-top-color:#d4af37}
-.press-badge{display:inline-block;background:#fff5e6;color:#ff9933;padding:5px 12px;border-radius:14px;font-size:.78rem;font-weight:600;margin-bottom:14px;letter-spacing:.4px}
-.press-item:nth-child(2) .press-badge{background:#e8f5e8;color:#138808}
-.press-item:nth-child(3) .press-badge{background:#fdf6e3;color:#b8961f}
-.press-item h3{font-size:1.15rem;margin:0 0 12px;color:#222}
-.press-item p{color:#666;line-height:1.65;margin:0 0 18px;font-size:.95rem}
-.read-more{color:#ff9933;font-weight:600;text-decoration:none;transition:gap .2s}
-.read-more:hover{color:#e68a2e}
+/* ---------- Press ---------- */
+.press-items{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:28px}
+.press-item{background:var(--card);padding:36px 30px;border:1px solid var(--rule);transition:transform .25s,box-shadow .25s,border-color .25s;position:relative}
+.press-item:hover{transform:translateY(-5px);box-shadow:0 18px 30px -16px rgba(31,22,18,.18);border-color:var(--saffron)}
+.press-badge{display:inline-block;font-family:var(--font-body);text-transform:uppercase;letter-spacing:.2em;font-size:.7rem;font-weight:600;color:var(--saffron);padding-left:32px;position:relative;margin-bottom:16px}
+.press-badge::before{content:"";position:absolute;left:0;top:50%;width:22px;height:1px;background:var(--saffron)}
+.press-item h3{font-family:var(--font-display);font-size:1.22rem;margin:0 0 12px;color:var(--ink);font-weight:600;letter-spacing:-.01em;line-height:1.3}
+.press-item p{color:var(--ink-soft);line-height:1.7;margin:0 0 20px;font-size:.95rem}
+.press-read{color:var(--ink);font-weight:600;text-decoration:none;font-size:.88rem;border-bottom:1px solid var(--saffron);padding-bottom:2px;transition:color .2s}
+.press-read:hover{color:var(--saffron)}
 
-/* Lightbox */
-.gallery-lightbox{position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9999;display:none;align-items:center;justify-content:center;animation:lbFade .2s}
+/* ---------- Lightbox ---------- */
+.gallery-lightbox{position:fixed;inset:0;background:rgba(31,22,18,.94);z-index:9999;display:none;align-items:center;justify-content:center;animation:lbFade .2s}
 .gallery-lightbox.is-open{display:flex}
 @keyframes lbFade{from{opacity:0}to{opacity:1}}
 .lb-content{max-width:90vw;max-height:85vh;margin:0;text-align:center}
-.lb-image{max-width:90vw;max-height:80vh;border-radius:8px;box-shadow:0 10px 40px rgba(0,0,0,.5)}
-.lb-caption{color:#fff;padding:14px 0 0;font-size:1rem}
-.lb-close,.lb-prev,.lb-next{position:absolute;background:rgba(255,255,255,.15);color:#fff;border:0;width:50px;height:50px;border-radius:50%;font-size:1.6rem;cursor:pointer;display:flex;align-items:center;justify-content:center;backdrop-filter:blur(8px);transition:background .2s}
-.lb-close:hover,.lb-prev:hover,.lb-next:hover{background:#ff9933}
+.lb-image{max-width:90vw;max-height:80vh;box-shadow:0 30px 60px rgba(0,0,0,.5)}
+.lb-caption{color:#f3ead9;padding:16px 0 0;font-size:.95rem;font-family:var(--font-display);font-style:italic}
+.lb-close,.lb-prev,.lb-next{position:absolute;background:rgba(243,234,217,.1);color:#f3ead9;border:1px solid rgba(243,234,217,.18);width:48px;height:48px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.lb-close:hover,.lb-prev:hover,.lb-next:hover{background:var(--saffron);border-color:var(--saffron);color:#fff}
 .lb-close{top:24px;right:24px}
 .lb-prev{left:24px;top:50%;transform:translateY(-50%)}
 .lb-next{right:24px;top:50%;transform:translateY(-50%)}
 
 @media (max-width:768px){
-	.gal-hero{padding:60px 20px}
-	.gal-hero h1{font-size:2rem}
-	.gal-hero-desc{font-size:1rem}
+	.page-hero{padding:60px 24px 60px}
 	.gallery-mosaic{grid-template-columns:repeat(2,1fr);grid-auto-rows:160px}
 	.gallery-item.is-large,.gallery-item.is-tall,.gallery-item.is-wide{grid-column:span 1;grid-row:span 1}
 	.gallery-item.is-large{grid-column:span 2}
-	.section-h2{font-size:1.5rem}
-	.lb-close,.lb-prev,.lb-next{width:42px;height:42px;font-size:1.3rem}
-	.lb-prev{left:8px}.lb-next{right:8px}
+	.video-gallery{margin:30px -20px;padding:60px 22px !important}
+	.lb-close,.lb-prev,.lb-next{width:42px;height:42px}
+	.lb-prev{left:10px}.lb-next{right:10px}
 }
 @media (max-width:480px){
 	.gallery-mosaic{grid-template-columns:1fr;grid-auto-rows:240px}
 	.gallery-item.is-large{grid-column:span 1}
-	.filter-btn{padding:7px 14px;font-size:.85rem}
+	.filter-btn{padding:7px 12px;font-size:.84rem}
 }
 </style>
 

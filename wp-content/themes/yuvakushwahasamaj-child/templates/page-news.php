@@ -1,7 +1,7 @@
 <?php
 /**
  * Template Name: News & Blog
- * Description: News and blog listing page template
+ * Description: News and blog listing page template — warm editorial style
  */
 
 get_header();
@@ -25,13 +25,19 @@ $news_query = new WP_Query( $args );
 $categories = get_categories( array( 'hide_empty' => true ) );
 ?>
 
-<main id="main" class="site-main">
-	<div class="container">
+<main id="main" class="site-main news-page">
 
-		<header class="news-header">
+	<!-- Editorial page hero -->
+	<section class="page-hero">
+		<div class="page-hero-inner">
+			<span class="eyebrow">The Community Journal</span>
 			<h1><?php the_title(); ?></h1>
-			<p class="news-intro">Stay updated with the latest happenings, achievements, and announcements from our community.</p>
-		</header>
+			<?php echo yks_ornament(); ?>
+			<p class="page-hero-lede">Stories, announcements, and reflections from the community — written by our members for our members.</p>
+		</div>
+	</section>
+
+	<div class="container">
 
 		<?php if ( $categories ) : ?>
 			<nav class="news-filters" aria-label="Filter by category">
@@ -39,7 +45,7 @@ $categories = get_categories( array( 'hide_empty' => true ) );
 				<?php foreach ( $categories as $cat ) : ?>
 					<a class="news-filter<?php echo $cat_slug === $cat->slug ? ' is-active' : ''; ?>" href="<?php echo esc_url( add_query_arg( 'cat', $cat->slug, get_permalink() ) ); ?>">
 						<?php echo esc_html( $cat->name ); ?>
-						<span class="news-filter-count">(<?php echo intval( $cat->count ); ?>)</span>
+						<span class="news-filter-count"><?php echo intval( $cat->count ); ?></span>
 					</a>
 				<?php endforeach; ?>
 			</nav>
@@ -57,7 +63,7 @@ $categories = get_categories( array( 'hide_empty' => true ) );
 								<?php if ( has_post_thumbnail() ) {
 									the_post_thumbnail( 'medium_large' );
 								} else { ?>
-									<div class="news-card-placeholder">📰</div>
+									<div class="news-card-placeholder"><span>YK</span></div>
 								<?php } ?>
 								<?php if ( $first_cat ) : ?>
 									<span class="news-card-cat"><?php echo esc_html( $first_cat->name ); ?></span>
@@ -70,7 +76,7 @@ $categories = get_categories( array( 'hide_empty' => true ) );
 								</p>
 								<h2 class="news-card-title"><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 								<p class="news-card-excerpt"><?php echo esc_html( wp_trim_words( get_the_excerpt(), 24 ) ); ?></p>
-								<a class="news-card-more" href="<?php the_permalink(); ?>">Read More →</a>
+								<a class="news-card-more" href="<?php the_permalink(); ?>">Continue reading &nbsp;→</a>
 							</div>
 						</article>
 					<?php endwhile; ?>
@@ -95,9 +101,9 @@ $categories = get_categories( array( 'hide_empty' => true ) );
 
 			<?php else : ?>
 				<div class="news-empty">
-					<p>No posts found<?php echo $cat_slug ? ' in this category' : ''; ?>. Check back soon!</p>
+					<p>No journal entries found<?php echo $cat_slug ? ' in this category' : ''; ?>. Check back soon.</p>
 					<?php if ( $cat_slug ) : ?>
-						<a class="btn-register" href="<?php the_permalink(); ?>">View all posts</a>
+						<a class="news-empty-btn" href="<?php the_permalink(); ?>">View all posts</a>
 					<?php endif; ?>
 				</div>
 			<?php endif;
@@ -108,51 +114,68 @@ $categories = get_categories( array( 'hide_empty' => true ) );
 </main>
 
 <style>
-.container{max-width:1200px;margin:0 auto;padding:0 20px}
-.site-main{padding-top:30px}
-.news-header{text-align:center;padding:40px 0 20px}
-.news-header h1{font-size:2.6rem;margin:0 0 10px;color:#222}
-.news-intro{color:#666;font-size:1.05rem;max-width:640px;margin:0 auto}
+.news-page{background:var(--paper);font-family:var(--font-body);color:var(--ink-soft)}
+.container{max-width:1240px;margin:0 auto;padding:0 28px}
 
-.news-filters{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:30px 0 40px}
-.news-filter{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:2px solid #eee;border-radius:30px;text-decoration:none;color:#555;font-size:.92rem;font-weight:500;transition:all .2s;background:#fff}
-.news-filter:hover{border-color:#ff9933;color:#ff9933}
-.news-filter.is-active{background:#ff9933;border-color:#ff9933;color:#fff}
-.news-filter-count{font-size:.8rem;opacity:.8}
+/* ---------- Editorial page hero ---------- */
+.page-hero{padding:80px 28px 70px;background:
+	radial-gradient(1200px 600px at 80% 10%, rgba(200,84,28,.08), transparent 60%),
+	radial-gradient(900px 500px at 0% 90%, rgba(30,90,60,.08), transparent 60%),
+	var(--paper)}
+.page-hero-inner{max-width:820px;margin:0 auto}
+.page-hero .eyebrow{padding-left:46px;position:relative}
+.page-hero .eyebrow::before{content:"";position:absolute;left:0;top:50%;width:34px;height:1px;background:var(--saffron)}
+.page-hero h1{font-family:var(--font-display);font-weight:600;font-size:clamp(2.4rem,4.6vw,3.8rem);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:14px 0 0}
+.page-hero h1::first-letter{color:var(--saffron);font-style:italic}
+.page-hero .hs-ornament{margin:18px 0 24px}
+.page-hero-lede{font-family:var(--font-display);font-style:italic;font-size:1.25rem;line-height:1.55;color:var(--ink);margin:0;max-width:680px}
 
-.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:30px;margin-bottom:50px}
-.news-card{background:#fff;border-radius:10px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.06);transition:transform .25s,box-shadow .25s;display:flex;flex-direction:column}
-.news-card:hover{transform:translateY(-4px);box-shadow:0 8px 20px rgba(0,0,0,.12)}
-.news-card-image{position:relative;display:block;height:200px;overflow:hidden;background:#f5f5f5}
-.news-card-image img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
+/* ---------- Filters ---------- */
+.news-filters{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;margin:50px 0 50px;padding:14px 18px;border-top:1px solid var(--rule);border-bottom:1px solid var(--rule)}
+.news-filter{display:inline-flex;align-items:center;gap:8px;padding:8px 18px;text-decoration:none;color:var(--ink-soft);font-size:.88rem;font-weight:500;letter-spacing:.02em;border-radius:0;transition:color .2s,background .2s;position:relative}
+.news-filter:hover{color:var(--saffron)}
+.news-filter.is-active{color:var(--saffron)}
+.news-filter.is-active::after{content:"";position:absolute;left:18px;right:18px;bottom:2px;height:1px;background:var(--saffron)}
+.news-filter-count{background:var(--paper-deep);padding:2px 8px;font-size:.72rem;font-weight:600;color:var(--ink-mute);border-radius:0}
+.news-filter.is-active .news-filter-count{background:var(--saffron);color:#fff}
+
+/* ---------- Grid + cards ---------- */
+.news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:36px;margin-bottom:60px}
+.news-card{background:var(--card);border:1px solid var(--rule);overflow:hidden;transition:transform .3s,box-shadow .3s,border-color .3s;display:flex;flex-direction:column}
+.news-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px -20px rgba(31,22,18,.18);border-color:var(--saffron)}
+.news-card-image{position:relative;display:block;height:220px;overflow:hidden;background:var(--paper-deep);text-decoration:none}
+.news-card-image img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
 .news-card:hover .news-card-image img{transform:scale(1.05)}
-.news-card-placeholder{height:100%;display:flex;align-items:center;justify-content:center;font-size:3.5rem;background:linear-gradient(135deg,#fff5e6,#e8f5e8)}
-.news-card-cat{position:absolute;top:14px;left:14px;background:#ff9933;color:#fff;padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.news-card-placeholder{height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f3ead9,#e6dccb)}
+.news-card-placeholder span{font-family:var(--font-display);font-size:3rem;color:var(--saffron);opacity:.4;font-weight:600;letter-spacing:.05em}
+.news-card-cat{position:absolute;top:16px;left:16px;background:var(--ink);color:var(--paper);padding:5px 12px;font-size:.68rem;font-weight:600;text-transform:uppercase;letter-spacing:.14em}
 
-.news-card-body{padding:22px;display:flex;flex-direction:column;flex:1}
-.news-card-date{color:#888;font-size:.82rem;margin:0 0 10px}
-.news-card-author{color:#aaa}
-.news-card-title{font-size:1.25rem;line-height:1.35;margin:0 0 12px}
-.news-card-title a{color:#222;text-decoration:none;transition:color .2s}
-.news-card-title a:hover{color:#ff9933}
-.news-card-excerpt{color:#666;font-size:.94rem;line-height:1.6;margin:0 0 18px;flex:1}
-.news-card-more{color:#138808;text-decoration:none;font-weight:600;font-size:.92rem;align-self:flex-start;transition:gap .2s}
-.news-card-more:hover{color:#0f6606}
+.news-card-body{padding:26px 26px 28px;display:flex;flex-direction:column;flex:1}
+.news-card-date{color:var(--ink-mute);font-size:.75rem;margin:0 0 12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase}
+.news-card-author{color:var(--ink-mute);font-weight:500;text-transform:none;letter-spacing:0}
+.news-card-title{font-family:var(--font-display);font-size:1.3rem;line-height:1.32;margin:0 0 14px;font-weight:600;letter-spacing:-.01em}
+.news-card-title a{color:var(--ink);text-decoration:none;transition:color .2s}
+.news-card-title a:hover{color:var(--saffron)}
+.news-card-excerpt{color:var(--ink-soft);font-size:.95rem;line-height:1.7;margin:0 0 20px;flex:1}
+.news-card-more{color:var(--ink);text-decoration:none;font-weight:600;font-size:.88rem;align-self:flex-start;border-bottom:1px solid var(--saffron);padding-bottom:2px;transition:color .2s}
+.news-card-more:hover{color:var(--saffron)}
 
-.news-pagination{display:flex;justify-content:center;gap:6px;margin:30px 0 60px;flex-wrap:wrap}
-.news-pagination .page-numbers{display:inline-flex;align-items:center;justify-content:center;min-width:40px;height:40px;padding:0 12px;border:2px solid #eee;border-radius:6px;text-decoration:none;color:#555;font-weight:500;transition:all .2s}
-.news-pagination .page-numbers:hover{border-color:#ff9933;color:#ff9933}
-.news-pagination .page-numbers.current{background:#ff9933;border-color:#ff9933;color:#fff}
+/* ---------- Pagination ---------- */
+.news-pagination{display:flex;justify-content:center;gap:4px;margin:40px 0 70px;flex-wrap:wrap}
+.news-pagination .page-numbers{display:inline-flex;align-items:center;justify-content:center;min-width:42px;height:42px;padding:0 14px;border:1px solid var(--rule);background:var(--card);text-decoration:none;color:var(--ink-soft);font-weight:500;font-size:.92rem;transition:all .2s}
+.news-pagination .page-numbers:hover{border-color:var(--saffron);color:var(--saffron)}
+.news-pagination .page-numbers.current{background:var(--ink);border-color:var(--ink);color:var(--paper)}
 .news-pagination .dots{border:0;background:none}
 
-.news-empty{text-align:center;padding:60px 20px;color:#666}
-.news-empty p{font-size:1.1rem;margin:0 0 20px}
-.btn-register{background-color:#ff9933;color:#fff;padding:10px 24px;text-decoration:none;border-radius:5px;display:inline-block;transition:background-color .3s}
-.btn-register:hover{background-color:#e68a2e}
+.news-empty{text-align:center;padding:70px 20px;color:var(--ink-mute)}
+.news-empty p{font-size:1.1rem;margin:0 0 24px;font-style:italic;font-family:var(--font-display)}
+.news-empty-btn{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);padding:11px 24px;text-decoration:none;font-weight:600;font-size:.9rem;letter-spacing:.04em;transition:background .25s}
+.news-empty-btn:hover{background:var(--saffron);color:#fff}
 
 @media (max-width:768px){
-	.news-header h1{font-size:1.9rem}
-	.news-grid{grid-template-columns:1fr;gap:20px}
+	.page-hero{padding:60px 24px 60px}
+	.news-grid{grid-template-columns:1fr;gap:24px}
+	.news-filters{padding:10px 12px;gap:2px}
 }
 </style>
 

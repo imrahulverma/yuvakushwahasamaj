@@ -30,6 +30,27 @@ add_action( 'after_setup_theme', 'yuvakushwahasamaj_register_menus' );
 
 
 /**
+ * Editorial ornament — small decorative divider used under section headings.
+ * Returns inline SVG. Variant 'light' uses cream color for dark backgrounds.
+ */
+if ( ! function_exists( 'yks_ornament' ) ) {
+	function yks_ornament( $variant = 'default' ) {
+		$color = $variant === 'light' ? '#f3ead9' : '#c8541c';
+		ob_start();
+		?>
+		<svg class="hs-ornament" width="68" height="14" viewBox="0 0 68 14" fill="none" aria-hidden="true">
+			<path d="M2 7h22" stroke="<?php echo esc_attr( $color ); ?>" stroke-width="1.2" stroke-linecap="round"/>
+			<path d="M44 7h22" stroke="<?php echo esc_attr( $color ); ?>" stroke-width="1.2" stroke-linecap="round"/>
+			<path d="M34 1c2 2 4 4 4 6s-2 4-4 6c-2-2-4-4-4-6s2-4 4-6z" stroke="<?php echo esc_attr( $color ); ?>" stroke-width="1.2" fill="none"/>
+			<circle cx="34" cy="7" r="1.2" fill="<?php echo esc_attr( $color ); ?>"/>
+		</svg>
+		<?php
+		return ob_get_clean();
+	}
+}
+
+
+/**
  * Register Custom Post Types
  */
 function yuvakushwahasamaj_register_post_types() {

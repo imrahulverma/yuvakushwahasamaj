@@ -1,7 +1,7 @@
 <?php
 /**
  * Template Name: About Us
- * Description: About Us page template
+ * Description: About Us page template — warm editorial style
  */
 
 get_header();
@@ -32,23 +32,37 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 
 <main id="main" class="site-main about-page">
 
-	<!-- Hero / Story -->
-	<section class="about-hero">
-		<?php if ( $hero_image_id ) : ?>
-			<div class="about-hero-bg" aria-hidden="true"><?php echo wp_get_attachment_image( $hero_image_id, 'full' ); ?></div>
-		<?php endif; ?>
-		<div class="about-hero-inner">
-			<?php if ( $intro ) : ?><p class="about-eyebrow"><?php echo esc_html( $intro ); ?></p><?php endif; ?>
-			<h1><?php the_title(); ?></h1>
-			<?php
-			while ( have_posts() ) :
-				the_post();
-				if ( get_the_content() ) : ?>
-					<div class="about-content"><?php the_content(); ?></div>
-				<?php endif;
-			endwhile;
-			rewind_posts();
-			?>
+	<!-- Editorial page hero -->
+	<section class="page-hero">
+		<div class="page-hero-inner">
+			<div class="page-hero-text">
+				<span class="eyebrow">A Chapter About · Us</span>
+				<h1><?php the_title(); ?></h1>
+				<?php echo yks_ornament(); ?>
+				<?php if ( $intro ) : ?>
+					<p class="page-hero-lede"><?php echo esc_html( $intro ); ?></p>
+				<?php endif; ?>
+				<?php
+				while ( have_posts() ) :
+					the_post();
+					if ( get_the_content() ) : ?>
+						<div class="page-hero-body"><?php the_content(); ?></div>
+					<?php endif;
+				endwhile;
+				rewind_posts();
+				?>
+			</div>
+			<?php if ( $hero_image_id ) : ?>
+				<div class="page-hero-figure">
+					<div class="page-hero-frame">
+						<?php echo wp_get_attachment_image( $hero_image_id, 'large' ); ?>
+					</div>
+					<div class="page-hero-caption">
+						<span class="page-hero-caption-rule"></span>
+						<span>A glimpse of the community we build</span>
+					</div>
+				</div>
+			<?php endif; ?>
 		</div>
 	</section>
 
@@ -56,23 +70,26 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 	<?php if ( $mission_text || $vision_text || $values_text ) : ?>
 		<section class="mvv">
 			<div class="container">
-				<h2 class="section-h2">Our Mission, Vision &amp; Core Values</h2>
+				<header class="section-head section-head--left">
+					<span class="eyebrow">Chapter 01 · What We Stand For</span>
+					<h2>Mission, Vision &amp; Values</h2>
+					<?php echo yks_ornament(); ?>
+				</header>
 				<div class="mvv-grid">
 					<?php
 					$mvv = array(
-						array( 'title' => $mission_title, 'text' => $mission_text, 'icon' => $mission_icon_id, 'emoji' => '🎯', 'class' => 'mvv-mission' ),
-						array( 'title' => $vision_title,  'text' => $vision_text,  'icon' => $vision_icon_id,  'emoji' => '👁',  'class' => 'mvv-vision' ),
-						array( 'title' => $values_title,  'text' => $values_text,  'icon' => $values_icon_id,  'emoji' => '💎', 'class' => 'mvv-values' ),
+						array( 'title' => $mission_title, 'text' => $mission_text, 'icon' => $mission_icon_id, 'num' => '01', 'class' => 'mvv-mission' ),
+						array( 'title' => $vision_title,  'text' => $vision_text,  'icon' => $vision_icon_id,  'num' => '02', 'class' => 'mvv-vision' ),
+						array( 'title' => $values_title,  'text' => $values_text,  'icon' => $values_icon_id,  'num' => '03', 'class' => 'mvv-values' ),
 					);
 					foreach ( $mvv as $item ) :
 						if ( ! $item['text'] ) continue; ?>
 						<article class="mvv-item <?php echo esc_attr( $item['class'] ); ?>">
-							<div class="mvv-icon">
-								<?php if ( $item['icon'] ) {
-									echo wp_get_attachment_image( $item['icon'], 'thumbnail' );
-								} else {
-									echo '<span class="mvv-emoji">' . esc_html( $item['emoji'] ) . '</span>';
-								} ?>
+							<div class="mvv-head">
+								<span class="mvv-num"><?php echo esc_html( $item['num'] ); ?></span>
+								<?php if ( $item['icon'] ) : ?>
+									<div class="mvv-icon"><?php echo wp_get_attachment_image( $item['icon'], 'thumbnail' ); ?></div>
+								<?php endif; ?>
 							</div>
 							<h3><?php echo esc_html( $item['title'] ); ?></h3>
 							<p><?php echo esc_html( $item['text'] ); ?></p>
@@ -86,8 +103,12 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 	<!-- Leadership Team -->
 	<section class="leadership-team">
 		<div class="container">
-			<h2 class="section-h2">Our Leadership Team</h2>
-			<p class="section-sub">The people behind our community's growth</p>
+			<header class="section-head section-head--left">
+				<span class="eyebrow">Chapter 02 · The People</span>
+				<h2>Our Leadership</h2>
+				<?php echo yks_ornament(); ?>
+				<p class="section-sub">The hands behind our community's growth.</p>
+			</header>
 			<div class="team-grid">
 				<?php
 				$team_members = get_posts( array(
@@ -106,7 +127,7 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 								<?php if ( $photo_id ) {
 									echo wp_get_attachment_image( $photo_id, 'medium', false, array( 'loading' => 'lazy' ) );
 								} else { ?>
-									<div class="team-photo-placeholder">👤</div>
+									<div class="team-photo-placeholder"><span>YK</span></div>
 								<?php } ?>
 							</div>
 							<div class="team-body">
@@ -122,7 +143,7 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 						<?php
 					}
 				} else {
-					echo '<p>Leadership team members coming soon.</p>';
+					echo '<p class="section-empty">Leadership team members coming soon.</p>';
 				}
 				?>
 			</div>
@@ -133,15 +154,20 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 	<?php if ( $reach_lines ) : ?>
 		<section class="our-reach">
 			<div class="container">
-				<h2 class="section-h2 section-h2-light">Our Reach</h2>
-				<p class="section-sub section-sub-light">Operating across multiple states and districts.</p>
-				<div class="reach-stats">
-					<?php foreach ( $reach_lines as $line ) :
+				<header class="section-head section-head--center section-head--inverse">
+					<span class="eyebrow eyebrow--light">Chapter 03 · By the Numbers</span>
+					<h2>Our Reach</h2>
+					<?php echo yks_ornament( 'light' ); ?>
+					<p class="section-sub section-sub--light">Operating across multiple states and districts.</p>
+				</header>
+				<div class="reach-grid">
+					<?php foreach ( $reach_lines as $i => $line ) :
 						$parts = array_map( 'trim', explode( '|', $line, 2 ) );
 						$num   = $parts[0] ?? '';
 						$lbl   = $parts[1] ?? '';
 						?>
 						<div class="reach-item">
+							<span class="reach-tag"><?php echo esc_html( str_pad( $i + 1, 2, '0', STR_PAD_LEFT ) ); ?></span>
 							<p class="reach-number"><?php echo esc_html( $num ); ?></p>
 							<h3><?php echo esc_html( $lbl ); ?></h3>
 						</div>
@@ -155,10 +181,17 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 	<?php if ( $aff_lines ) : ?>
 		<section class="affiliations">
 			<div class="container">
-				<h2 class="section-h2">Affiliations &amp; Recognition</h2>
+				<header class="section-head section-head--left">
+					<span class="eyebrow">Chapter 04 · Recognition</span>
+					<h2>Affiliations &amp; Honours</h2>
+					<?php echo yks_ornament(); ?>
+				</header>
 				<ul class="affiliations-list">
-					<?php foreach ( $aff_lines as $aff ) : ?>
-						<li><?php echo esc_html( $aff ); ?></li>
+					<?php foreach ( $aff_lines as $i => $aff ) : ?>
+						<li>
+							<span class="aff-num"><?php echo esc_html( str_pad( $i + 1, 2, '0', STR_PAD_LEFT ) ); ?></span>
+							<span class="aff-text"><?php echo esc_html( $aff ); ?></span>
+						</li>
 					<?php endforeach; ?>
 				</ul>
 			</div>
@@ -168,77 +201,103 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 </main>
 
 <style>
-.about-page{background:#fafafa}
-.container{max-width:1200px;margin:0 auto;padding:0 20px}
+.about-page{background:var(--paper);font-family:var(--font-body);color:var(--ink-soft)}
+.container{max-width:1240px;margin:0 auto;padding:0 28px}
 
-/* Hero */
-.about-hero{position:relative;color:#fff;text-align:center;padding:90px 24px;background:linear-gradient(135deg,#ff9933 0%,#138808 100%);overflow:hidden}
-.about-hero-bg{position:absolute;inset:0;z-index:0}
-.about-hero-bg img{width:100%;height:100%;object-fit:cover;opacity:.35}
-.about-hero::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.1),rgba(0,0,0,.45));z-index:1}
-.about-hero-inner{position:relative;z-index:2;max-width:820px;margin:0 auto}
-.about-eyebrow{margin:0 0 10px;text-transform:uppercase;letter-spacing:3px;font-size:.82rem;font-weight:600;opacity:.95}
-.about-hero h1{font-size:3rem;font-weight:800;margin:0 0 20px;line-height:1.15;text-shadow:0 2px 12px rgba(0,0,0,.3)}
-.about-content{font-size:1.1rem;line-height:1.8;opacity:.95;max-width:720px;margin:0 auto}
-.about-content p{margin:0 0 1em}
+/* ---------- Editorial page hero (shared pattern) ---------- */
+.page-hero{padding:80px 28px 100px;background:
+	radial-gradient(1200px 600px at 80% 10%, rgba(200,84,28,.08), transparent 60%),
+	radial-gradient(900px 500px at 0% 90%, rgba(30,90,60,.08), transparent 60%),
+	var(--paper)}
+.page-hero-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:start}
+.page-hero-text .eyebrow{padding-left:46px;position:relative}
+.page-hero-text .eyebrow::before{content:"";position:absolute;left:0;top:50%;width:34px;height:1px;background:var(--saffron)}
+.page-hero-text h1{font-family:var(--font-display);font-weight:600;font-size:clamp(2.4rem,4.6vw,3.8rem);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:14px 0 0}
+.page-hero-text h1::first-letter{color:var(--saffron);font-style:italic}
+.page-hero-text .hs-ornament{margin:18px 0 24px}
+.page-hero-lede{font-family:var(--font-display);font-style:italic;font-size:1.25rem;line-height:1.55;color:var(--ink);margin:0 0 24px;font-weight:400}
+.page-hero-body{font-size:1.05rem;line-height:1.85;color:var(--ink-soft)}
+.page-hero-body p{margin:0 0 1em}
+.page-hero-figure{position:relative}
+.page-hero-frame{position:relative;border-radius:2px;overflow:hidden;background:var(--paper-deep);box-shadow:0 30px 60px -20px rgba(31,22,18,.25), 0 0 0 1px var(--rule)}
+.page-hero-frame::before{content:"";position:absolute;inset:14px;border:1px solid rgba(255,255,255,.55);pointer-events:none;z-index:2}
+.page-hero-frame img{width:100%;height:500px;object-fit:cover;display:block;filter:saturate(.95) contrast(1.02)}
+.page-hero-caption{display:flex;align-items:center;gap:14px;margin:18px 0 0;font-size:.78rem;letter-spacing:.06em;color:var(--ink-mute);text-transform:uppercase;font-weight:500}
+.page-hero-caption-rule{display:inline-block;width:36px;height:1px;background:var(--saffron)}
 
-/* Section commons */
-.section-h2{font-size:2.2rem;text-align:center;margin:0 0 10px;color:#222;font-weight:700;position:relative;padding-bottom:14px}
-.section-h2::after{content:"";display:block;width:60px;height:4px;background:linear-gradient(90deg,#ff9933,#138808);margin:14px auto 0;border-radius:2px}
-.section-sub{text-align:center;color:#666;margin:0 0 50px;font-size:1.05rem}
-.section-h2-light{color:#fff}
-.section-h2-light::after{background:#fff}
-.section-sub-light{color:rgba(255,255,255,.95)}
+/* ---------- Section heads ---------- */
+.about-page section{padding:100px 0}
+.section-head{margin:0 0 50px;max-width:760px}
+.section-head--left{text-align:left}
+.section-head--center{text-align:center;margin-left:auto;margin-right:auto}
+.section-head--center .hs-ornament{margin-left:auto;margin-right:auto}
+.section-head h2{font-family:var(--font-display);font-weight:600;font-size:clamp(1.9rem,3.4vw,2.9rem);line-height:1.1;letter-spacing:-.015em;color:var(--ink);margin:8px 0 0}
+.section-head--inverse h2{color:#fff}
+.section-head .hs-ornament{margin-top:18px}
+.section-head--left .hs-ornament{margin-left:0}
+.section-sub{margin:18px 0 0;color:var(--ink-mute);font-size:1.02rem;line-height:1.7}
+.section-sub--light{color:#d8cdb6}
+.section-empty{color:var(--ink-mute);font-style:italic;padding:24px 0}
 
-/* MVV */
-.mvv{padding:80px 0;background:#fff}
-.mvv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:30px;margin-top:50px}
-.mvv-item{background:#fafafa;padding:40px 30px;border-radius:14px;text-align:center;transition:transform .25s,box-shadow .25s;border-top:4px solid #ff9933}
-.mvv-item:hover{transform:translateY(-6px);box-shadow:0 12px 28px rgba(0,0,0,.08)}
-.mvv-item.mvv-vision{border-top-color:#138808}
-.mvv-item.mvv-values{border-top-color:#d4af37}
-.mvv-icon{width:90px;height:90px;margin:0 auto 22px;border-radius:50%;background:linear-gradient(135deg,#fff5e6,#e8f5e8);display:flex;align-items:center;justify-content:center;overflow:hidden}
-.mvv-icon img{width:100%;height:100%;object-fit:cover;border-radius:50%}
-.mvv-emoji{font-size:2.5rem}
-.mvv-item h3{font-size:1.4rem;margin:0 0 14px;color:#222;font-weight:700}
-.mvv-item p{color:#555;line-height:1.7;margin:0;font-size:.98rem}
+/* ---------- MVV ---------- */
+.mvv{background:var(--paper-deep)}
+.mvv-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:0;border-top:1px solid var(--rule);border-left:1px solid var(--rule)}
+.mvv-item{background:var(--card);padding:46px 36px;border-right:1px solid var(--rule);border-bottom:1px solid var(--rule);transition:background .25s,border-color .25s;position:relative}
+.mvv-item:hover{background:#fffaf2}
+.mvv-head{display:flex;align-items:center;gap:18px;margin:0 0 24px}
+.mvv-num{font-family:var(--font-display);font-size:.9rem;font-weight:600;color:var(--saffron);letter-spacing:.18em}
+.mvv-icon{width:48px;height:48px;border-radius:50%;overflow:hidden;background:var(--paper-deep);display:flex;align-items:center;justify-content:center}
+.mvv-icon img{width:100%;height:100%;object-fit:cover}
+.mvv-item h3{font-family:var(--font-display);font-size:1.45rem;font-weight:600;margin:0 0 14px;color:var(--ink);line-height:1.25}
+.mvv-item p{color:var(--ink-soft);line-height:1.75;margin:0;font-size:.98rem}
 
-/* Leadership */
-.leadership-team{padding:80px 0;background:#fafafa}
-.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:28px}
-.team-card{background:#fff;border-radius:14px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.05);transition:transform .25s,box-shadow .25s;text-align:center}
-.team-card:hover{transform:translateY(-6px);box-shadow:0 14px 30px rgba(0,0,0,.1)}
-.team-photo{width:100%;height:280px;overflow:hidden;background:#eee}
-.team-photo img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s}
-.team-card:hover .team-photo img{transform:scale(1.05)}
-.team-photo-placeholder{height:100%;display:flex;align-items:center;justify-content:center;font-size:4rem;background:linear-gradient(135deg,#fff5e6,#e8f5e8);color:rgba(255,153,51,.55)}
-.team-body{padding:22px 22px 26px}
-.team-card h3{font-size:1.22rem;margin:0 0 4px;color:#222}
-.team-card .designation{color:#ff9933;font-weight:700;font-size:.88rem;text-transform:uppercase;letter-spacing:.8px;margin:0 0 12px}
-.team-card .bio{color:#666;font-size:.92rem;line-height:1.6;margin:0}
+/* ---------- Leadership ---------- */
+.leadership-team{background:var(--paper)}
+.team-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:32px}
+.team-card{background:var(--card);border:1px solid var(--rule);overflow:hidden;transition:transform .25s,box-shadow .25s,border-color .25s}
+.team-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px -18px rgba(31,22,18,.18);border-color:var(--saffron)}
+.team-photo{width:100%;height:300px;overflow:hidden;background:var(--paper-deep)}
+.team-photo img{width:100%;height:100%;object-fit:cover;transition:transform .5s}
+.team-card:hover .team-photo img{transform:scale(1.04)}
+.team-photo-placeholder{height:100%;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#f3ead9,#e6dccb)}
+.team-photo-placeholder span{font-family:var(--font-display);font-size:3rem;color:var(--saffron);opacity:.45;font-weight:600;letter-spacing:.05em}
+.team-body{padding:24px 24px 28px}
+.team-card h3{font-family:var(--font-display);font-size:1.3rem;font-weight:600;margin:0 0 6px;color:var(--ink);letter-spacing:-.01em}
+.team-card .designation{color:var(--saffron);font-weight:600;font-size:.74rem;text-transform:uppercase;letter-spacing:.18em;margin:0 0 14px}
+.team-card .bio{color:var(--ink-soft);font-size:.93rem;line-height:1.7;margin:0}
 
-/* Reach */
-.our-reach{padding:80px 0;background:linear-gradient(135deg,#ff9933 0%,#e68a2e 50%,#138808 100%);color:#fff}
-.reach-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-top:50px}
-.reach-item{background:rgba(255,255,255,.14);backdrop-filter:blur(6px);padding:36px 24px;border-radius:14px;text-align:center;transition:transform .25s}
-.reach-item:hover{transform:translateY(-5px)}
-.reach-number{font-size:3.2rem;font-weight:800;margin:0 0 10px;line-height:1;text-shadow:0 2px 8px rgba(0,0,0,.15)}
-.reach-item h3{margin:0;font-size:1rem;font-weight:500;opacity:.95;letter-spacing:.5px}
+/* ---------- Our Reach ---------- */
+.our-reach{background:var(--ink);color:#f3ead9;position:relative;overflow:hidden}
+.our-reach::before{content:"";position:absolute;inset:0;background:
+	radial-gradient(800px 400px at 80% 0%, rgba(200,84,28,.18), transparent 60%),
+	radial-gradient(700px 400px at 10% 100%, rgba(30,90,60,.18), transparent 60%);
+	pointer-events:none}
+.our-reach .container{position:relative}
+.reach-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border-top:1px solid rgba(243,234,217,.18);border-left:1px solid rgba(243,234,217,.18)}
+.reach-item{padding:42px 30px;border-right:1px solid rgba(243,234,217,.18);border-bottom:1px solid rgba(243,234,217,.18);transition:background .25s}
+.reach-item:hover{background:rgba(200,84,28,.08)}
+.reach-tag{font-family:var(--font-display);font-size:.82rem;color:var(--saffron);font-weight:600;letter-spacing:.2em}
+.reach-number{font-family:var(--font-display);font-size:3.4rem;font-weight:600;margin:18px 0 6px;line-height:1;color:#fff;letter-spacing:-.02em}
+.reach-item h3{margin:0;font-size:.85rem;color:#d8cdb6;letter-spacing:.08em;text-transform:uppercase;font-weight:500;font-family:var(--font-body)}
 
-/* Affiliations */
-.affiliations{padding:80px 0;background:#fff}
-.affiliations-list{list-style:none;padding:0;max-width:720px;margin:50px auto 0;display:grid;grid-template-columns:1fr;gap:0}
-.affiliations-list li{padding:18px 24px 18px 56px;border-bottom:1px solid #eee;font-size:1.02rem;color:#333;position:relative;transition:background .2s,padding-left .2s}
-.affiliations-list li:hover{background:#fff8ed;padding-left:62px}
-.affiliations-list li::before{content:"✓";position:absolute;left:18px;top:50%;transform:translateY(-50%);background:#138808;color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.92rem}
-.affiliations-list li:last-child{border-bottom:0}
+/* ---------- Affiliations ---------- */
+.affiliations{background:var(--paper)}
+.affiliations-list{list-style:none;padding:0;max-width:820px;margin:0;display:grid;grid-template-columns:1fr;gap:0;border-top:1px solid var(--rule)}
+.affiliations-list li{padding:22px 28px;border-bottom:1px solid var(--rule);font-size:1.02rem;color:var(--ink);display:flex;align-items:center;gap:24px;transition:background .2s,padding .2s}
+.affiliations-list li:hover{background:var(--paper-deep);padding-left:36px}
+.aff-num{font-family:var(--font-display);font-size:.85rem;color:var(--saffron);font-weight:600;letter-spacing:.18em;flex:0 0 auto;min-width:36px}
+.aff-text{flex:1}
 
-@media (max-width:768px){
-	.about-hero{padding:60px 20px}
-	.about-hero h1{font-size:2rem}
-	.about-content{font-size:1rem}
-	.section-h2{font-size:1.6rem}
-	.mvv,.leadership-team,.our-reach,.affiliations{padding:50px 0}
+/* ---------- Responsive ---------- */
+@media (max-width:960px){
+	.page-hero{padding:60px 24px 70px}
+	.page-hero-inner{grid-template-columns:1fr;gap:50px}
+	.page-hero-frame img{height:360px}
+	.about-page section{padding:70px 0}
+}
+@media (max-width:560px){
+	.page-hero{padding:50px 20px 60px}
+	.container{padding:0 20px}
 	.team-photo{height:240px}
 	.reach-number{font-size:2.4rem}
 }
