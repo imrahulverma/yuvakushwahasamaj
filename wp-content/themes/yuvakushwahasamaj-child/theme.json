@@ -1,0 +1,9 @@
+{
+	"$schema": "https://schemas.wp.org/wp/6.5/theme.json",
+	"version": 3,
+	"title": "Yuvakushwahasamaj Community",
+	"description": "Custom child theme for Yuvakushwahasamaj Community with ACF integration",
+	"author": "Yuvakushwahasamaj",
+	"textdomain": "yuvakushwahasamaj",
+	"domainPath": "/languages"
+}

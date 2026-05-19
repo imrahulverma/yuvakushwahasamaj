@@ -1,0 +1,57 @@
+/*
+Theme Name: Yuvakushwahasamaj Community
+Theme URI: https://yuvakushwahasamaj.local
+Description: Custom child theme for Yuvakushwahasamaj Community Website with ACF integration
+Author: Yuvakushwahasamaj
+Author URI: https://yuvakushwahasamaj.local
+Template: twentytwentyfive
+Version: 1.0.0
+Text Domain: yuvakushwahasamaj
+Domain Path: /languages
+Requires at least: 6.0
+Requires PHP: 7.4
+License: GPL v2 or later
+License URI: https://www.gnu.org/licenses/gpl-2.0.html
+*/
+
+/* ============================================================
+   Foundation — CSS variables + base typography only.
+   All page-specific styling lives inside each template's
+   <style> block so they stay self-contained and conflict-free.
+   ============================================================ */
+
+:root {
+	--color-primary: #ff9933;
+	--color-secondary: #138808;
+	--color-tertiary: #1f4788;
+	--color-accent: #ffffff;
+}
+
+body {
+	font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	margin: 0;
+	color: #222;
+	line-height: 1.6;
+}
+
+a { color: var(--color-primary); }
+a:hover { color: #e68a2e; }
+
+img { max-width: 100%; height: auto; }
+
+.site-main { min-height: 60vh; }
+
+/* Generic register button (used by events template) */
+.btn-register {
+	background-color: var(--color-primary);
+	color: white;
+	padding: 10px 20px;
+	text-decoration: none;
+	border-radius: 5px;
+	display: inline-block;
+	transition: background-color 0.3s ease;
+}
+.btn-register:hover {
+	background-color: #e68a2e;
+	color: white;
+}
