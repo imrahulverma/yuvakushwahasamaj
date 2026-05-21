@@ -79,12 +79,18 @@ get_header();
 											<p class="event-meta event-time"><?php echo esc_html( date_i18n( 'h:i A', strtotime( $event_time ) ) ); ?></p>
 										<?php endif; ?>
 										<p class="event-excerpt"><?php echo esc_html( wp_trim_words( wp_strip_all_tags( get_the_content() ), 22 ) ); ?></p>
-										<?php if ( $register_link ) : ?>
-											<a href="<?php echo esc_url( $register_link ); ?>" class="event-cta" target="_blank" rel="noopener">
-												<span>Register</span>
+										<div class="event-actions">
+											<?php if ( $register_link ) : ?>
+												<a href="<?php echo esc_url( $register_link ); ?>" class="event-cta" target="_blank" rel="noopener">
+													<span>Register</span>
+													<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+												</a>
+											<?php endif; ?>
+											<a href="<?php the_permalink(); ?>" class="event-cta event-cta--ghost">
+												<span>View details</span>
 												<svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
 											</a>
-										<?php endif; ?>
+										</div>
 									</div>
 								</div>
 							</article>
@@ -165,7 +171,7 @@ get_header();
 		</section>
 
 		<!-- Annual Sammelan Highlight -->
-		<section class="sammelan-highlight">
+		<!-- <section class="sammelan-highlight">
 			<div class="sammelan-inner">
 				<span class="eyebrow eyebrow--light">An Invitation</span>
 				<h2>Annual Sammelan &amp; Mahasammelan</h2>
@@ -173,7 +179,7 @@ get_header();
 				<p>Our flagship annual gathering brings together community members from across the region to celebrate our heritage, share achievements, and plan for the future.</p>
 				<p class="sammelan-stay">Details about the upcoming Mahasammelan will be announced here.</p>
 			</div>
-		</section>
+		</section> -->
 
 	</div>
 </main>
@@ -225,6 +231,7 @@ get_header();
 .event-meta{color:var(--ink-mute);font-size:.88rem;margin:0 0 6px;line-height:1.5}
 .event-meta::before{content:"◦ ";color:var(--saffron)}
 .event-excerpt{color:var(--ink-soft);font-size:.92rem;line-height:1.65;margin:10px 0 16px}
+.event-actions{display:flex;flex-wrap:wrap;gap:10px}
 .event-cta{display:inline-flex;align-items:center;gap:8px;background:var(--ink);color:var(--paper);padding:9px 18px;text-decoration:none;font-weight:600;font-size:.85rem;letter-spacing:.04em;transition:background .25s,transform .25s}
 .event-cta svg{transition:transform .25s}
 .event-cta:hover{background:var(--saffron);color:#fff}

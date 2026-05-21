@@ -32,39 +32,48 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 
 <main id="main" class="site-main about-page">
 
-	<!-- Editorial page hero -->
-	<section class="page-hero">
-		<div class="page-hero-inner">
-			<div class="page-hero-text">
-				<span class="eyebrow">A Chapter About · Us</span>
-				<h1><?php the_title(); ?></h1>
-				<?php echo yks_ornament(); ?>
-				<?php if ( $intro ) : ?>
-					<p class="page-hero-lede"><?php echo esc_html( $intro ); ?></p>
-				<?php endif; ?>
-				<?php
-				while ( have_posts() ) :
-					the_post();
-					if ( get_the_content() ) : ?>
-						<div class="page-hero-body"><?php the_content(); ?></div>
-					<?php endif;
-				endwhile;
-				rewind_posts();
-				?>
+	<!-- Editorial page hero (full-bleed banner) -->
+	<section class="page-hero<?php echo $hero_image_id ? ' page-hero--has-image' : ''; ?>">
+		<?php if ( $hero_image_id ) : ?>
+			<div class="page-hero-bg" aria-hidden="true">
+				<?php echo wp_get_attachment_image( $hero_image_id, 'full' ); ?>
 			</div>
-			<?php if ( $hero_image_id ) : ?>
-				<div class="page-hero-figure">
-					<div class="page-hero-frame">
-						<?php echo wp_get_attachment_image( $hero_image_id, 'large' ); ?>
-					</div>
-					<div class="page-hero-caption">
-						<span class="page-hero-caption-rule"></span>
-						<span>A glimpse of the community we build</span>
-					</div>
-				</div>
+			<div class="page-hero-overlay" aria-hidden="true"></div>
+		<?php endif; ?>
+		<div class="page-hero-content">
+			<span class="eyebrow eyebrow--banner">A Chapter About · Us</span>
+			<h1><?php the_title(); ?></h1>
+			<?php echo yks_ornament( $hero_image_id ? 'light' : 'default' ); ?>
+			<?php if ( $intro ) : ?>
+				<p class="page-hero-lede"><?php echo esc_html( $intro ); ?></p>
 			<?php endif; ?>
 		</div>
 	</section>
+
+	<!-- About story / content -->
+	<?php
+	$about_has_content = false;
+	while ( have_posts() ) :
+		the_post();
+		if ( trim( wp_strip_all_tags( get_the_content() ) ) !== '' ) {
+			$about_has_content = true;
+		}
+	endwhile;
+	rewind_posts();
+	if ( $about_has_content ) : ?>
+		<section class="about-story">
+			<div class="container about-story-inner">
+				<header class="section-head section-head--left">
+					<span class="eyebrow">Chapter 00 · Our Story</span>
+					<h2>The Journey</h2>
+					<?php echo yks_ornament(); ?>
+				</header>
+				<div class="about-story-body">
+					<?php while ( have_posts() ) : the_post(); the_content(); endwhile; rewind_posts(); ?>
+				</div>
+			</div>
+		</section>
+	<?php endif; ?>
 
 	<!-- Mission / Vision / Values -->
 	<?php if ( $mission_text || $vision_text || $values_text ) : ?>
@@ -114,6 +123,8 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 				$team_members = get_posts( array(
 					'post_type'      => 'team_member',
 					'posts_per_page' => -1,
+					'orderby'        => 'menu_order',
+					'order'          => 'ASC',
 				) );
 
 				if ( $team_members ) {
@@ -204,26 +215,36 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 .about-page{background:var(--paper);font-family:var(--font-body);color:var(--ink-soft)}
 .container{max-width:1240px;margin:0 auto;padding:0 28px}
 
-/* ---------- Editorial page hero (shared pattern) ---------- */
-.page-hero{padding:80px 28px 100px;background:
-	radial-gradient(1200px 600px at 80% 10%, rgba(200,84,28,.08), transparent 60%),
-	radial-gradient(900px 500px at 0% 90%, rgba(30,90,60,.08), transparent 60%),
-	var(--paper)}
-.page-hero-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1.1fr 1fr;gap:80px;align-items:start}
-.page-hero-text .eyebrow{padding-left:46px;position:relative}
-.page-hero-text .eyebrow::before{content:"";position:absolute;left:0;top:50%;width:34px;height:1px;background:var(--saffron)}
-.page-hero-text h1{font-family:var(--font-display);font-weight:600;font-size:clamp(2.4rem,4.6vw,3.8rem);line-height:1.05;letter-spacing:-.022em;color:var(--ink);margin:14px 0 0}
-.page-hero-text h1::first-letter{color:var(--saffron);font-style:italic}
-.page-hero-text .hs-ornament{margin:18px 0 24px}
-.page-hero-lede{font-family:var(--font-display);font-style:italic;font-size:1.25rem;line-height:1.55;color:var(--ink);margin:0 0 24px;font-weight:400}
-.page-hero-body{font-size:1.05rem;line-height:1.85;color:var(--ink-soft)}
-.page-hero-body p{margin:0 0 1em}
-.page-hero-figure{position:relative}
-.page-hero-frame{position:relative;border-radius:2px;overflow:hidden;background:var(--paper-deep);box-shadow:0 30px 60px -20px rgba(31,22,18,.25), 0 0 0 1px var(--rule)}
-.page-hero-frame::before{content:"";position:absolute;inset:14px;border:1px solid rgba(255,255,255,.55);pointer-events:none;z-index:2}
-.page-hero-frame img{width:100%;height:500px;object-fit:cover;display:block;filter:saturate(.95) contrast(1.02)}
-.page-hero-caption{display:flex;align-items:center;gap:14px;margin:18px 0 0;font-size:.78rem;letter-spacing:.06em;color:var(--ink-mute);text-transform:uppercase;font-weight:500}
-.page-hero-caption-rule{display:inline-block;width:36px;height:1px;background:var(--saffron)}
+/* ---------- Editorial page hero (full-bleed banner) ---------- */
+.page-hero{position:relative;min-height:62vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:90px 28px 100px;overflow:hidden;color:var(--paper);background:var(--ink)}
+.page-hero:not(.page-hero--has-image){background:
+	radial-gradient(1200px 600px at 80% 10%, rgba(200,84,28,.35), transparent 60%),
+	radial-gradient(900px 500px at 0% 90%, rgba(30,90,60,.4), transparent 60%),
+	var(--ink)}
+.page-hero-bg{position:absolute;inset:0;z-index:0}
+.page-hero-bg img{width:100%;height:100%;object-fit:cover;display:block;filter:saturate(.95) contrast(1.02)}
+.page-hero-overlay{position:absolute;inset:0;z-index:1;background:
+	linear-gradient(180deg, rgba(31,22,18,.55) 0%, rgba(31,22,18,.45) 50%, rgba(31,22,18,.75) 100%),
+	radial-gradient(900px 500px at 50% 100%, rgba(200,84,28,.22), transparent 65%)}
+
+.page-hero-content{position:relative;z-index:2;max-width:880px;margin:0 auto}
+.eyebrow--banner{display:inline-block;color:#f3ead9;letter-spacing:.32em;font-size:.74rem;font-weight:600;position:relative;padding:0 46px;margin:0 0 22px}
+.eyebrow--banner::before,.eyebrow--banner::after{content:"";position:absolute;top:50%;width:34px;height:1px;background:var(--saffron)}
+.eyebrow--banner::before{left:0}
+.eyebrow--banner::after{right:0}
+.page-hero-content h1{font-family:var(--font-display);font-weight:600;font-size:clamp(2.6rem,5.4vw,4.6rem);line-height:1.05;letter-spacing:-.025em;color:#fff;margin:0;text-shadow:0 4px 30px rgba(0,0,0,.4)}
+.page-hero-content h1::first-letter{color:var(--saffron);font-style:italic}
+.page-hero-content .hs-ornament{display:block;margin:22px auto 26px}
+.page-hero-lede{font-family:var(--font-display);font-style:italic;font-size:clamp(1.05rem,1.5vw,1.35rem);line-height:1.55;color:#f3ead9;margin:0 auto;max-width:640px;text-shadow:0 2px 16px rgba(0,0,0,.4)}
+
+/* ---------- About story / introduction ---------- */
+.about-story{padding:90px 0}
+.about-story-inner{display:grid;grid-template-columns:1fr 2fr;gap:60px;align-items:start;max-width:1100px}
+.about-story-body{font-size:1.08rem;line-height:1.85;color:var(--ink-soft);font-family:var(--font-body)}
+.about-story-body > *:first-child{margin-top:0}
+.about-story-body p{margin:0 0 1.3em}
+.about-story-body p:first-of-type{font-family:var(--font-display);font-style:italic;font-size:1.3rem;line-height:1.55;color:var(--ink);font-weight:400;border-left:2px solid var(--saffron);padding-left:24px;margin-bottom:1.4em}
+.about-story-body a{color:var(--saffron);border-bottom:1px solid var(--saffron);text-decoration:none}
 
 /* ---------- Section heads ---------- */
 .about-page section{padding:100px 0}
@@ -290,13 +311,15 @@ $aff_lines       = array_filter( array_map( 'trim', preg_split( '/\r\n|\r|\n/', 
 
 /* ---------- Responsive ---------- */
 @media (max-width:960px){
-	.page-hero{padding:60px 24px 70px}
-	.page-hero-inner{grid-template-columns:1fr;gap:50px}
-	.page-hero-frame img{height:360px}
+	.page-hero{min-height:auto;padding:80px 24px 90px}
+	.about-story{padding:60px 0}
+	.about-story-inner{grid-template-columns:1fr;gap:36px}
 	.about-page section{padding:70px 0}
 }
 @media (max-width:560px){
-	.page-hero{padding:50px 20px 60px}
+	.page-hero{padding:70px 20px 80px}
+	.eyebrow--banner{padding:0 30px;font-size:.68rem;letter-spacing:.22em}
+	.eyebrow--banner::before,.eyebrow--banner::after{width:22px}
 	.container{padding:0 20px}
 	.team-photo{height:240px}
 	.reach-number{font-size:2.4rem}

@@ -20,12 +20,23 @@ $sections = get_posts( array(
 // Chapter counter for editorial numbering
 $chapter = 0;
 
+// Alternating background tracker — only counts "light" sections (hero/stats/cta have their own fixed dark treatments).
+$light_index   = 0;
+$dark_types    = array( 'hero', 'stats', 'cta' );
+
 foreach ( $sections as $section ) {
 	setup_postdata( $section );
 	$post_id      = $section->ID;
 	$section_type = get_scf_field( 'section_type', $post_id );
 	$chapter++;
 	$chapter_label = sprintf( 'Chapter %02d', $chapter );
+
+	// Compute light-band alternation class for non-dark sections
+	$alt_class = '';
+	if ( ! in_array( $section_type, $dark_types, true ) ) {
+		$light_index++;
+		$alt_class = ( $light_index % 2 === 1 ) ? ' hs-band--paper' : ' hs-band--paper-deep';
+	}
 
 	switch ( $section_type ) {
 
@@ -61,7 +72,7 @@ foreach ( $sections as $section ) {
 							<span><?php echo esc_html( $cta_text ); ?></span>
 							<svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
 						</a>
-						<a class="hs-hero-secondary" href="<?php echo esc_url( home_url( '/about/' ) ); ?>">Our Story</a>
+						<!-- <a class="hs-hero-secondary" href="<?php echo esc_url( home_url( '/about/' ) ); ?>">Our Story</a> -->
 					</div>
 				</div>
 				<div class="hs-hero-scroll" aria-hidden="true">
@@ -76,7 +87,7 @@ foreach ( $sections as $section ) {
 			$excerpt   = get_scf_field( 'about_excerpt', $post_id );
 			$read_more = get_scf_field( 'read_more_link', $post_id );
 			?>
-			<section class="hs-about">
+			<section class="hs-about<?php echo esc_attr( $alt_class ); ?>">
 				<div class="hs-about-inner">
 					<header class="hs-section-head hs-section-head--left">
 						<span class="eyebrow"><?php echo esc_html( $chapter_label ); ?> · About</span>
@@ -133,7 +144,7 @@ foreach ( $sections as $section ) {
 		case 'events':
 			$events = get_upcoming_events( 3 );
 			?>
-			<section class="hs-events">
+			<section class="hs-events<?php echo esc_attr( $alt_class ); ?>">
 				<div class="hs-events-inner">
 					<header class="hs-section-head hs-section-head--left">
 						<span class="eyebrow"><?php echo esc_html( $chapter_label ); ?> · Gatherings</span>
@@ -180,10 +191,72 @@ foreach ( $sections as $section ) {
 			<?php
 			break;
 
+				case 'news':
+			// Two modes for the "News Ticker" section type:
+			//   1. If the section post has content → render it as an announcements list (manual)
+			//   2. If empty → pull the latest 6 blog posts and render as journal cards
+			$has_manual_announcements = trim( wp_strip_all_tags( $section->post_content ) ) !== '';
+			$eyebrow_suffix           = $has_manual_announcements ? 'Announcements' : 'Journal';
+			?>
+			<section class="hs-news-section<?php echo esc_attr( $alt_class ); ?>">
+				<div class="hs-news-inner">
+					<header class="hs-section-head hs-section-head--left">
+						<span class="eyebrow"><?php echo esc_html( $chapter_label . ' · ' . $eyebrow_suffix ); ?></span>
+						<h2><?php echo esc_html( get_the_title( $section ) ); ?></h2>
+						<?php echo yks_ornament(); ?>
+					</header>
+
+					<?php if ( $has_manual_announcements ) : ?>
+						<div class="hs-announcements">
+							<?php echo wp_kses_post( apply_filters( 'the_content', $section->post_content ) ); ?>
+						</div>
+					<?php else :
+						$latest_news = get_posts( array(
+							'post_type'      => 'post',
+							'post_status'    => 'publish',
+							'posts_per_page' => 6,
+						) );
+						?>
+						<div class="hs-news-grid">
+							<?php if ( $latest_news ) : foreach ( $latest_news as $news ) :
+								$news_cats = get_the_category( $news->ID );
+								$first_cat = $news_cats ? $news_cats[0] : null;
+								?>
+								<article class="hs-news-card">
+									<a class="hs-news-card-image" href="<?php echo esc_url( get_permalink( $news ) ); ?>">
+										<?php if ( has_post_thumbnail( $news ) ) {
+											echo get_the_post_thumbnail( $news, 'medium_large' );
+										} else { ?>
+											<div class="hs-news-placeholder">
+												<span>YK</span>
+											</div>
+										<?php } ?>
+										<?php if ( $first_cat ) : ?>
+											<span class="hs-news-cat"><?php echo esc_html( $first_cat->name ); ?></span>
+										<?php endif; ?>
+									</a>
+									<div class="hs-news-card-body">
+										<p class="hs-news-date"><?php echo esc_html( get_the_date( 'F j, Y', $news ) ); ?></p>
+										<h3 class="hs-news-title"><a href="<?php echo esc_url( get_permalink( $news ) ); ?>"><?php echo esc_html( get_the_title( $news ) ); ?></a></h3>
+										<p class="hs-news-excerpt"><?php echo esc_html( wp_trim_words( strip_shortcodes( wp_strip_all_tags( $news->post_content ) ), 22 ) ); ?></p>
+										<a class="hs-news-more" href="<?php echo esc_url( get_permalink( $news ) ); ?>">Continue reading &nbsp;→</a>
+									</div>
+								</article>
+							<?php endforeach; else : ?>
+								<p class="hs-empty">No journal entries yet.</p>
+							<?php endif; ?>
+						</div>
+						<p class="hs-link-more"><a href="<?php echo esc_url( home_url( '/news/' ) ); ?>">Read the journal &nbsp;→</a></p>
+					<?php endif; ?>
+				</div>
+			</section>
+			<?php
+			break;
+
 		case 'gallery':
 			$items = get_gallery_items( 6 );
 			?>
-			<section class="hs-gallery">
+			<section class="hs-gallery<?php echo esc_attr( $alt_class ); ?>">
 				<div class="hs-gallery-inner">
 					<header class="hs-section-head hs-section-head--left">
 						<span class="eyebrow"><?php echo esc_html( $chapter_label ); ?> · Album</span>
@@ -210,7 +283,7 @@ foreach ( $sections as $section ) {
 
 		case 'testimonials':
 			?>
-			<section class="hs-testimonials">
+			<section class="hs-testimonials<?php echo esc_attr( $alt_class ); ?>">
 				<div class="hs-testimonials-inner">
 					<header class="hs-section-head hs-section-head--center">
 						<span class="eyebrow"><?php echo esc_html( $chapter_label ); ?> · Voices</span>
@@ -223,57 +296,7 @@ foreach ( $sections as $section ) {
 			<?php
 			break;
 
-		case 'news':
-			$latest_news = get_posts( array(
-				'post_type'      => 'post',
-				'post_status'    => 'publish',
-				'posts_per_page' => 6,
-			) );
-			?>
-			<section class="hs-news-section">
-				<div class="hs-news-inner">
-					<header class="hs-section-head hs-section-head--left">
-						<span class="eyebrow"><?php echo esc_html( $chapter_label ); ?> · Journal</span>
-						<h2><?php echo esc_html( get_the_title( $section ) ); ?></h2>
-						<?php echo yks_ornament(); ?>
-					</header>
-					<?php if ( $section->post_content ) : ?>
-						<div class="hs-news-intro"><?php echo wp_kses_post( apply_filters( 'the_content', $section->post_content ) ); ?></div>
-					<?php endif; ?>
-					<div class="hs-news-grid">
-						<?php if ( $latest_news ) : foreach ( $latest_news as $news ) :
-							$news_cats = get_the_category( $news->ID );
-							$first_cat = $news_cats ? $news_cats[0] : null;
-							?>
-							<article class="hs-news-card">
-								<a class="hs-news-card-image" href="<?php echo esc_url( get_permalink( $news ) ); ?>">
-									<?php if ( has_post_thumbnail( $news ) ) {
-										echo get_the_post_thumbnail( $news, 'medium_large' );
-									} else { ?>
-										<div class="hs-news-placeholder">
-											<span>YK</span>
-										</div>
-									<?php } ?>
-									<?php if ( $first_cat ) : ?>
-										<span class="hs-news-cat"><?php echo esc_html( $first_cat->name ); ?></span>
-									<?php endif; ?>
-								</a>
-								<div class="hs-news-card-body">
-									<p class="hs-news-date"><?php echo esc_html( get_the_date( 'F j, Y', $news ) ); ?></p>
-									<h3 class="hs-news-title"><a href="<?php echo esc_url( get_permalink( $news ) ); ?>"><?php echo esc_html( get_the_title( $news ) ); ?></a></h3>
-									<p class="hs-news-excerpt"><?php echo esc_html( wp_trim_words( strip_shortcodes( wp_strip_all_tags( $news->post_content ) ), 22 ) ); ?></p>
-									<a class="hs-news-more" href="<?php echo esc_url( get_permalink( $news ) ); ?>">Continue reading &nbsp;→</a>
-								</div>
-							</article>
-						<?php endforeach; else : ?>
-							<p class="hs-empty">No journal entries yet.</p>
-						<?php endif; ?>
-					</div>
-					<p class="hs-link-more"><a href="<?php echo esc_url( home_url( '/news/' ) ); ?>">Read the journal &nbsp;→</a></p>
-				</div>
-			</section>
-			<?php
-			break;
+	
 
 		case 'cta':
 			$cta_text = get_scf_field( 'cta_button_text', $post_id ) ?: 'Join Us';
@@ -296,7 +319,7 @@ foreach ( $sections as $section ) {
 
 		default:
 			?>
-			<section class="hs-generic">
+			<section class="hs-generic<?php echo esc_attr( $alt_class ); ?>">
 				<div class="hs-generic-inner">
 					<header class="hs-section-head hs-section-head--center">
 						<span class="eyebrow"><?php echo esc_html( $chapter_label ); ?></span>
@@ -364,8 +387,11 @@ wp_reset_postdata();
 .hs-hero-scroll svg{animation:scrollHint 1.8s ease-in-out infinite}
 @keyframes scrollHint{0%,100%{transform:translateY(0);opacity:.7}50%{transform:translateY(5px);opacity:1}}
 
+/* ---------- Alternating light bands (position-based, survives reordering) ---------- */
+.hs-band--paper{background:var(--paper)}
+.hs-band--paper-deep{background:var(--paper-deep)}
+
 /* ---------- About ---------- */
-.hs-about{background:var(--paper)}
 .hs-about-inner{max-width:1240px;margin:0 auto;display:grid;grid-template-columns:1fr 1.4fr;gap:80px;align-items:start}
 .hs-about-body{font-size:1.08rem;line-height:1.85;color:var(--ink-soft)}
 .hs-about-excerpt,.hs-about-content{margin:0 0 28px}
@@ -390,7 +416,6 @@ wp_reset_postdata();
 .hs-stat-label{font-size:.85rem;margin:0;color:#d8cdb6;letter-spacing:.06em;text-transform:uppercase;font-weight:500}
 
 /* ---------- Events ---------- */
-.hs-events{background:var(--paper-deep)}
 .hs-events-inner{max-width:1240px;margin:0 auto}
 .hs-events-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:32px}
 .hs-event-card{background:var(--card);border:1px solid var(--rule);transition:transform .3s,box-shadow .3s,border-color .3s;display:flex;flex-direction:column;overflow:hidden}
@@ -415,7 +440,6 @@ wp_reset_postdata();
 .hs-empty{text-align:center;color:var(--ink-mute);padding:40px 20px;grid-column:1/-1;font-style:italic}
 
 /* ---------- Gallery ---------- */
-.hs-gallery{background:var(--paper)}
 .hs-gallery-inner{max-width:1240px;margin:0 auto}
 .hs-gallery-grid{display:grid;grid-template-columns:repeat(12,1fr);gap:14px;grid-auto-rows:160px}
 .hs-gallery-item{position:relative;margin:0;overflow:hidden;cursor:pointer;background:var(--paper-deep);border:1px solid var(--rule)}
@@ -431,7 +455,7 @@ wp_reset_postdata();
 .hs-gallery-item:hover figcaption{opacity:1;transform:translateY(0)}
 
 /* ---------- Testimonials ---------- */
-.hs-testimonials{background:var(--paper-deep);text-align:center}
+.hs-testimonials{text-align:center}
 .hs-testimonials-inner{max-width:1100px;margin:0 auto}
 .hs-testimonials-content{max-width:900px;margin:0 auto;font-size:1.1rem;line-height:1.8}
 .hs-testimonials blockquote{background:var(--card);padding:50px 44px;border:1px solid var(--rule);position:relative;margin:24px 0;font-family:var(--font-display);font-style:italic;font-size:1.25rem;line-height:1.7;color:var(--ink);font-weight:400}
@@ -439,9 +463,18 @@ wp_reset_postdata();
 .hs-testimonials cite{display:block;margin-top:24px;color:var(--ink-mute);font-style:normal;font-weight:600;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;font-family:var(--font-body)}
 
 /* ---------- News / Journal ---------- */
-.hs-news-section{background:var(--paper)}
 .hs-news-inner{max-width:1240px;margin:0 auto}
 .hs-news-intro{max-width:780px;margin:0 0 40px;color:var(--ink-soft);font-size:1.05rem;line-height:1.8}
+
+/* ---------- Announcements (manual content variant of news section) ---------- */
+.hs-announcements{max-width:960px;border-top:1px solid var(--rule)}
+.hs-announcements p,.hs-announcements li{margin:0;padding:22px 28px 22px 64px;border-bottom:1px solid var(--rule);font-size:1.05rem;line-height:1.6;color:var(--ink);position:relative;transition:background .2s,padding-left .2s;list-style:none}
+.hs-announcements p::before,.hs-announcements li::before{content:"";position:absolute;left:26px;top:50%;width:22px;height:1px;background:var(--saffron);transform:translateY(-50%)}
+.hs-announcements p:hover,.hs-announcements li:hover{background:var(--card);padding-left:72px}
+.hs-announcements ul,.hs-announcements ol{padding:0;margin:0;list-style:none}
+.hs-announcements blockquote{margin:0;padding:0}
+.hs-announcements a{color:var(--saffron);border-bottom:1px solid var(--saffron);text-decoration:none}
+.hs-announcements a:hover{color:var(--saffron-d);border-bottom-color:var(--saffron-d)}
 .hs-news-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:36px}
 .hs-news-card{background:var(--card);border:1px solid var(--rule);transition:transform .3s,box-shadow .3s,border-color .3s;display:flex;flex-direction:column;overflow:hidden}
 .hs-news-card:hover{transform:translateY(-5px);box-shadow:0 20px 40px -20px rgba(31,22,18,.18);border-color:var(--saffron)}
@@ -473,7 +506,6 @@ wp_reset_postdata();
 .hs-cta-btn--invert:hover{background:#fff;color:var(--saffron)}
 
 /* ---------- Generic fallback ---------- */
-.hs-generic{background:var(--paper)}
 .hs-generic-inner{max-width:900px;margin:0 auto;text-align:center}
 .hs-generic-content{font-size:1.05rem;line-height:1.8;color:var(--ink-soft)}
 

@@ -64,7 +64,7 @@ function yuvakushwahasamaj_register_post_types() {
 		'show_in_rest'      => true,
 		'menu_position'     => 5,
 		'menu_icon'         => 'dashicons-layout',
-		'supports'          => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+		'supports'          => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'page-attributes' ),
 		'rewrite'           => array( 'slug' => 'home-section' ),
 		'labels'            => array(
 			'singular_name' => 'Home Section',
@@ -100,7 +100,7 @@ function yuvakushwahasamaj_register_post_types() {
 		'show_in_rest'      => true,
 		'menu_position'     => 7,
 		'menu_icon'         => 'dashicons-groups',
-		'supports'          => array( 'title', 'editor', 'thumbnail', 'custom-fields' ),
+		'supports'          => array( 'title', 'editor', 'thumbnail', 'custom-fields', 'page-attributes' ),
 		'rewrite'           => array( 'slug' => 'team-member' ),
 		'labels'            => array(
 			'singular_name' => 'Team Member',
@@ -148,6 +148,46 @@ function yuvakushwahasamaj_register_post_types() {
 	) );
 }
 add_action( 'init', 'yuvakushwahasamaj_register_post_types' );
+
+
+/**
+ * Show the "Order" column on the Home Sections admin list and make it the
+ * default sort, so the section sequence is visible and editable via Quick Edit.
+ */
+$yks_orderable_cpts = array( 'home_section', 'team_member' );
+
+foreach ( $yks_orderable_cpts as $yks_cpt ) {
+	add_filter( "manage_{$yks_cpt}_posts_columns", function( $cols ) {
+		$new = array();
+		foreach ( $cols as $key => $label ) {
+			$new[ $key ] = $label;
+			if ( $key === 'title' ) {
+				$new['menu_order'] = 'Order';
+			}
+		}
+		return $new;
+	} );
+
+	add_action( "manage_{$yks_cpt}_posts_custom_column", function( $column, $post_id ) {
+		if ( $column === 'menu_order' ) {
+			echo esc_html( get_post_field( 'menu_order', $post_id ) );
+		}
+	}, 10, 2 );
+
+	add_filter( "manage_edit-{$yks_cpt}_sortable_columns", function( $cols ) {
+		$cols['menu_order'] = 'menu_order';
+		return $cols;
+	} );
+}
+
+add_action( 'pre_get_posts', function( $q ) use ( $yks_orderable_cpts ) {
+	if ( ! is_admin() || ! $q->is_main_query() ) return;
+	$screen = function_exists( 'get_current_screen' ) ? get_current_screen() : null;
+	if ( $screen && in_array( $screen->post_type, $yks_orderable_cpts, true ) && ! $q->get( 'orderby' ) ) {
+		$q->set( 'orderby', 'menu_order' );
+		$q->set( 'order', 'ASC' );
+	}
+} );
 
 
 /**
